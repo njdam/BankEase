@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #034ea2;
+    top: 0;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+
+.logo-container img {
+    max-height: 50px;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+section#hero {
+    background-color: whitesmoke;
+    background-image: image-set("../images/bankease_background_logo.png");
+    background-size: 100px;
+    padding: 50px;
+    text-align: center;
+}
+
+section#pics {
+    background-color: #034ea2;
+    box-sizing: border-box;
+    padding: 5px;
+    text-align: center;
+    background-image: image-set("../images/bankease_background_logo2.png");
+    background-size: 150px;
+    background-position: center;
+}
+
+/* Add the following styles to your existing styles */
+.slideshow-container {
+    max-height: 150px;
+    position: relative;
+}
+
+.mySlides {
+    display: inline-block; 
+    /* Set the width of the slides to 100% */
+    transition: transform 0.5s ease;
+}
+
+img {
+    margin-top: 0px;
+    width: 150px;
+    max-height: 150px;
+}
+
+/* Add styles for the animation */
+.fade {
+    transform: translateX(100%); /* Initial position, off to the right */
+}
+
+.fade.show {
+    transform: translateX(0); /* Displayed position, sliding in from the left */
+}
+
+.description {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: justify;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    max-width: 100%;
+    align-content: center;
+}
+
+.container {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    background-color: yellow;
+}
+
+.column {
+    width: 45%; /* Adjust the width as needed */
+    float: left;
+    margin-left: 3%;
+    margin: 2%;
+}
+
+.clear {
+    clear: both;
+}
+
+section p#p2 {
+    font-style: italic;
+    color: darkgreen;
+    font-weight: bolder;
+    text-size-adjust: 14px;
+}
+
+footer {
+    background-color: #034ea2;
+	height: 50px;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	border-top: 1px solid #CCCCCC;
+	line-height: 50px;
+	display: flex;
+    align-items: center;
+	justify-content: center;
+    justify-self: stretch;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    display: table-footer-group;
+}

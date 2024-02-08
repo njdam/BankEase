@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styles/signin.css">
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="login-container">
+        <div class="left-column">
+            <div class="welcome-content">
+                <img src="../static/images/bankease_logo.png" alt="BankEase Logo">
+                <h2>Welcome to BankEase</h2>
+                <p id="p3"><b style="color: goldenrod;">Join bankease today</b> and step into a world of modern banking, where simplicity meets sophistication. Elevate your banking experience with us - <b style="color: greenyellow; font-family: 'Courier New', Courier, monospace;">Banking Simplified, Anytime, Anywhere.</b></p>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="center-content">
+                <h2>Login</h2>
+                <p>Enter your login credentials to access your account</p>
+                <form action="#" method="post">
+                    <label for="username">Username</label>
+                    <br>
+                    <input type="text" id="username" name="username" required>
+                    <br>
+                    <br>
+                    <label for="password">Password</label>
+                    <br>
+                    <input type="password" id="password" name="password" required>
+                    <br>
+                    <br>
+                    <div class="checkbox">
+                        <input type="checkbox" id="agree" name="agree">
+                        <label for="agree">By logging in, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+                    </div>
+                    <br>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don’t have an account? <a href="#">Register</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
