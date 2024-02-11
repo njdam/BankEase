@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../static/styles/signin.css">
-    <title>Login Page</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
+    <title>BankEase Login Page</title>
 </head>
 <body>
     <div class="login-container">
@@ -12,14 +16,13 @@
             <div class="welcome-content">
                 <img src="../static/images/bankease_logo.png" alt="BankEase Logo">
                 <h2>Welcome to BankEase</h2>
-                <p id="p3"><b style="color: goldenrod;">Join bankease today</b> and step into a world of modern banking, where simplicity meets sophistication. Elevate your banking experience with us - <b style="color: greenyellow; font-family: 'Courier New', Courier, monospace;">Banking Simplified, Anytime, Anywhere.</b></p>
             </div>
         </div>
         <div class="right-column">
             <div class="center-content">
-                <h2>Login</h2>
+                <h2>BankEase Login</h2>
                 <p>Enter your login credentials to access your account</p>
-                <form action="#" method="post">
+                <form action="/login" method="post">
                     <label for="username">Username</label>
                     <br>
                     <input type="text" id="username" name="username" required>
@@ -37,7 +40,7 @@
                     <br>
                     <button type="submit">Login</button>
                 </form>
-                <p>Don’t have an account? <a href="#">Register</a></p>
+                <p>Don’t have an account? <a href="../templates/signup.html">Register</a></p>
             </div>
         </div>
     </div>

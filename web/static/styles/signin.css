@@ -7,11 +7,15 @@ body {
 .login-container {
     display: flex;
     flex-direction: column; /* Stack columns in mobile view */
-    height: 100vb;
+    height: 100vh;
 }
 
 .left-column {
     background-color: #034ea2;
+    background-image: image-set('../images/house_backgound_illist.png');
+    background-size: 100vw;
+    background-position: center bottom -70px;
+    background-repeat: no-repeat;
     padding: 20px;
     color: #fff;
     display: flex;
@@ -28,6 +32,7 @@ body {
     padding: 10px;
     background-color: #f2f2f2;
     display: flex;
+    min-height: 61vmin;
     align-items: center;
     justify-content: center; /* Center content in the column */
 }
@@ -48,10 +53,12 @@ img {
 
     .left-column {
         flex: 1;
+        background-position: bottom;
+        background-size: 100vh;
+        background-repeat: no-repeat;
     }
 
     .right-column {
         flex: 2;
     }
 }
-
