@@ -1,0 +1,38 @@
+# Nginx Configuration by making server to listen on 80 and serve on 5001 port
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name bankease.com;
+
+        location / {
+                proxy_pass http://localhost:5000/;
+
+                add_header X-Served-By $hostname;
+        }
+
+        location /static/ {
+                # rewrite ^(/static/[^?]*)\?.*$ $1 last; # This like alias
+                alias /home/ubuntu/AirBnB_clone_v4/web/static/;
+                try_files $uri $uri/ =404;
+        }
+
+        location /api/ {
+                proxy_pass http://localhost:5002;
+
+                add_header X-Served-By $hostname;
+        }
+
+        if ($request_filename ~ redirect_me){
+                rewrite ^ https://github.com/njdam?tab=repositories permanent;
+        }
+
+        error_page 404 /404.html;
+        location = /404.html {
+                root /var/www/error/;
+                internal;
+        }
+}

@@ -5,14 +5,22 @@ from models.accounts import Account
 from models.loans import Loan
 import mysql.connector
 import json
+from flask_sqlalchemy import SQLAlchemy  # Import SQLAlchemy
+from flask_login import UserMixin
+from auth import login_manager
+
+db = SQLAlchemy()
 
 
-class User(Account, Loan):
+class User(db.Model, Account, Loan, UserMixin):
     """A function which create a user for BankEase System."""
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(80), nullable=False)
 
     def __init__(self, username, password):
         """ User initialisation """
-        self.user_id = None
+        self.user_id = self.id
         self.username = username
         self.password = self.hash_password(password)
         self.first_name = None
@@ -24,7 +32,17 @@ class User(Account, Loan):
         self.home_address = None
         self.is_admin = False
         self.created_at = None
-        super().__init__(self.user_id)
+        super(User, self).__init__() # Call the constructor of db.Model
+        Account.__init__(self, user_id=self.id)  # Call the constructor of Account
+        Loan.__init__(self, user_id=self.id)  # Call the constructor of Loan
+
+    @property
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        """Return the user's ID as a unicode string."""
+        return str(self.id)
 
     def get_account(self):
         """ Get the associated account for this user. """
@@ -34,7 +52,8 @@ class User(Account, Loan):
 
         if account_info:
             account_data = account_info[0]
-            account_instance = Account(user_id=self.user_id)
+            account_instance = Account(user_id=account_data['user_id'])
+            # Set attributes for the Account instance
             for key, value in account_data.items():
                 setattr(account_instance, key, value)
             return account_instance
@@ -42,80 +61,60 @@ class User(Account, Loan):
             raise Exception("No account found for this user.")
 
     @classmethod
-    def signin(cls):
+    def signin(cls, username, password):
         """ Signin for accessing user information. """
         while True:
-            print("Welcome to BankEase - Banking Simplified, Anytime, Anywhere")
-            print("...........................................................")
-            print("BankEase SingIn Page\n")
             try:
-                username = cls.get_valid_username()
-                password = cls.get_valid_password()
-                try:
-                    user = cls.authenticate(username, password)
-                    return user
-                except AuthenticationError as e:
-                    print(f"{e} Please try again!")
-
-            except KeyboardInterrupt:
-                print("\nThank you for visiting us!")
-                print("Exiting...................")
-                exit()
+                user = cls.authenticate(username, password)
+                return user
+            except AuthenticationError as e:
+                print(f"{e} Please try again!")
 
     @classmethod
-    def signup(cls):
+    def signup(
+            cls, username, password, first_name, last_name,
+            email, phone_number,
+            country, city, home_address, account_type
+            ):
         """ Input of user information to create new user. """
         while True:
-            print("Welcome to BankEase - Banking Simplified, Anytime, Anywhere")
-            print("...........................................................")
-            print("BankEase SingUp Page\n")
             try:
-                username = cls.get_valid_username()
-                password = cls.get_valid_password()
-                first_name = input("Enter Your First Name: ")
-                last_name = input("Enter Your Last Name: ")
-                email = input("Enter Your Email: ")
-                phone_number = cls.get_valid_phone_number()
-                country = input("Enter Your Country: ")
-                city = input("Enter Your City: ")
-                home_address = input("Enter Your Home Address: ")
-                try:
-                    cls.create_user_table()
-                    cls.create_user(
-                            username, password, first_name, last_name,
-                            email, phone_number,
-                            country, city, home_address
-                            )
-                    print("Account created successfully!")
-                    break
-                except mysql.connector.Error as err:
-                    if err.errno == 1062:  # Duplicate entry error
-                        print(f"Error: Username '{username}' already exists. Please choose a different username.")
-                        exit()
-                    else:
-                        print(f"Error: {err}")
-                        exit()
-                except Exception as e:
-                    print(f"Error: {e}")
-                    exit()
+                cls.create_user_table()
+                cls.create_user(
+                    username, password, first_name, last_name,
+                    email, phone_number,
+                    country, city, home_address, account_type
+                    )
 
-            except KeyboardInterrupt:
-                print("\nThank you for visiting us!")
-                print("Existing .................")
+                print("Account created successfully!")
+                break
+            except mysql.connector.Error as err:
+                if err.errno == 1062:  # Duplicate entry error
+                    print(f"Error: Username '{username}' already exists. Please choose a different username.")
+                    exit()
+                else:
+                    print(f"Error: {err}")
+                    exit()
+            except Exception as e:
+                print(f"Error: {e}")
                 exit()
 
     @classmethod
     def authenticate(cls, username, password):
         """Sign in function"""
-        user_info = cls.get_user_by_username(username)
-        user_data = user_info[0]
-        if user_info and cls.check_password(password, user_data["password"]):
-            user_instance = cls(username, password)
-            for key, value in user_data.items():
-                setattr(user_instance, key, value)
-            return user_instance
-        else:
-            raise AuthenticationError("Invalid username or password!!")
+        try:
+            user_info = cls.get_user_by_username(username)
+            user_data = user_info[0]
+            if user_info and cls.check_password(password, user_data["password"]):
+                user_instance = cls(username, password)
+                for key, value in user_data.items():
+                    setattr(user_instance, key, value)
+                return user_instance
+            else:
+                raise AuthenticationError("Invalid username or password!!")
+
+        except Exception as e:
+            print(f"Error: {e}")
     
     @classmethod
     def create_user_table(cls):
@@ -139,9 +138,32 @@ class User(Account, Loan):
         cls.execute_query(query, multi=True)
 
     @classmethod
-    def create_user(cls, username, password, first_name, last_name, email, phone_number, country, city, home_address, is_admin=False):
+    def create_user(cls, username, password, first_name, last_name, email, phone_number, country, city, home_address, account_type, is_admin=False):
         """ A function to create a new user account. """
         hash_password = cls.hash_password(password)
+
+        query = '''
+        CREATE DATABASE IF NOT EXISTS BankEase;
+        '''
+        cls.execute_query(query, multi=True)
+
+        query = '''
+        CREATE TABLE IF NOT EXISTS users (
+        user_id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(250) UNIQUE NOT NULL,
+        password VARCHAR(250) NOT NULL,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        email VARCHAR(255) NOT NULL,
+        phone_number VARCHAR(20) NOT NULL,
+        country VARCHAR(255),
+        city VARCHAR(255),
+        home_address VARCHAR(255),
+        is_admin BOOLEAN DEFAULT FALSE, -- Customer or Admin
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        '''
+        cls.execute_query(query, multi=True)
 
         query = '''
         INSERT INTO users (username, password, first_name, last_name, email, phone_number, country, city, home_address, is_admin)
@@ -163,7 +185,6 @@ class User(Account, Loan):
         else:
             raise Exception("Failed to set User atrributes.")
             
-        account_type = input("Enter Account Type(Current, Saving, Fixed): ")
         Account.create_account(user_data["user_id"], account_type)
 
     @classmethod

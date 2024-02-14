@@ -1,7 +1,69 @@
+* {box-sizing: border-box;}
 body {
-    font-family: Arial, sans-serif;
+    font-family: Verdana, sans-serif;
     margin: 0;
     padding: 0;
+}
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  /*max-width: 1000px;*/
+  position: relative;
+  margin: auto;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 10px 2px;
+  top: 0;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 2s;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .text {font-size: 11px}
 }
 
 header {
@@ -37,54 +99,33 @@ section#hero {
     background-color: whitesmoke;
     background-image: image-set("../images/bankease_background_logo.png");
     background-size: 100px;
-    padding: 50px;
+    padding: 10px;
     text-align: center;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.blinking-text {
+    animation: blink 2s infinite;
 }
 
 section#pics {
-    background-color: #034ea2;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 20px;
     text-align: center;
-    background-image: image-set("../images/bankease_background_logo2.png");
-    background-size: 150px;
-    background-position: center;
-}
-
-/* Add the following styles to your existing styles */
-.slideshow-container {
-    max-height: 150px;
-    position: relative;
-}
-
-.mySlides {
-    display: inline-block; 
-    /* Set the width of the slides to 100% */
-    transition: transform 0.5s ease;
-}
-
-img {
-    margin-top: 0px;
-    width: 150px;
-    max-height: 150px;
-}
-
-/* Add styles for the animation */
-.fade {
-    transform: translateX(100%); /* Initial position, off to the right */
-}
-
-.fade.show {
-    transform: translateX(0); /* Displayed position, sliding in from the left */
+    margin-top: -30px;
 }
 
 .description {
-    display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     text-align: justify;
     font-family: 'Times New Roman', Times, serif;
     font-size: large;
+    margin-top: 0;
     max-width: 100%;
     align-content: center;
 }
@@ -100,7 +141,8 @@ img {
     width: 45%; /* Adjust the width as needed */
     float: left;
     margin-left: 3%;
-    margin: 2%;
+    margin-top: -1px;
+    padding-bottom: 40px;
 }
 
 .clear {

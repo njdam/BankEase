@@ -26,11 +26,11 @@
         <div class="header">
             <div class="menu-icon" onclick="openSidebar()">&#9776;</div>
             <div class="account-info">
-                <span>Account Number: XXXXXXXX</span>
-                <div class="account-dropdown-content" id="accountDropdown">
+                <span>Account Number: {{ Account.account_number }}</span>
+                <!--<div class="account-dropdown-content" id="accountDropdown">
                     <a href="#" onclick="switchAccount('Account1')">Account1</a>
                     <a href="#" onclick="switchAccount('Account2')">Account2</a>
-                </div>
+                </div>-->
             </div>
             <div class="profile-section" onclick="openProfilePage()">
                 <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture">
@@ -40,9 +40,9 @@
         <div class="account-info">
             <h2>Account Information</h2>
             <!-- Display user account details here -->
-            <p>Account Number: XXXXXXXX</p>
-            <p>Account Balance: $XXXX.XX</p>
-            <p>Account Type: Savings</p>
+            <p>Account Number: {{ Account.account_number }}</p>
+            <p>Account Balance: {{ Account.balance }}</p>
+            <p>Account Type: {{ Account.account_type }}</p>
         </div>
 
         <h2>Recent Transactions</h2>
@@ -54,16 +54,32 @@
 <div class="profile-modal" id="profileModal">
     <h2>Edit Profile</h2>
     <label for="editUsername">Username:</label>
-    <input type="text" id="editUsername" value="Current Username" disabled>
+    <input type="text" id="editUsername" value="{{ User.username }}" disabled>
 
     <label for="editFirstName">First Name:</label>
-    <input type="text" id="editFirstName" value="Current First Name">
+    <input type="text" id="editFirstName" value='{{ User.first_name }}'>
 
     <label for="editLastName">Last Name:</label>
-    <input type="text" id="editLastName" value="Current Last Name">
+    <input type="text" id="editLastName" value="{{ User.last_name }}">
 
     <label for="editEmail">Email:</label>
-    <input type="email" id="editEmail" value="Current Email">
+    <input type="email" id="editEmail" value="{{ User.email }}">
+
+    <label for="editPhoneNumber">Phone Number:</label>
+    <div class="phone-number-input">
+        <select id="countryCode" name="countryCode"></select>
+        <input type="tel" id="editPhoneNumber" name="editPhoneNumber" value="{{ User.phone_number }}" placeholder="Enter your phone number">
+    </div>
+    <input type="email" id="editPhoneNumber" value="{{ User.country }}">
+    
+    <label for="editCountry">Country:</label>
+    <input type="email" id="editCountry" value="{{ User.country }}">
+
+    <label for="editCity">City:</label>
+    <input type="email" id="editCity" value="{{ User.city }}">
+
+    <label for="editHomeAddress">Home Address:</label>
+    <input type="email" id="editHomeAddress" value="{{ User.home_address }}">
 
     <label for="editProfilePic">Profile Picture:</label>
     <input type="file" id="editProfilePic">

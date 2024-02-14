@@ -44,3 +44,32 @@ function switchAccount(accountName) {
     // Fetch and update account information (replace with actual data fetching logic)
     document.querySelector('.account-info p:first-child').textContent = 'Account Number: ' + accountName + 'XXXX';
 }
+
+// Predefined list of country codes and names
+const countryCodes = [
+    { code: '+250', name: 'Rwanda'},
+    { code: '+1', name: 'United States' },
+    { code: '+44', name: 'United Kingdom' },
+    // Add more countries as needed
+];
+
+// Function to populate the country code dropdown
+function populateCountryCodes() {
+    const countryCodeDropdown = document.getElementById('countryCode');
+
+    // Loop through the country codes and add options to the dropdown
+    countryCodes.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.code;
+        option.text = `${country.code} (${country.name})`;
+        countryCodeDropdown.add(option);
+    });
+    // Set the initial value based on the passed user phone number
+    const initialPhoneNumber = '{{ User.phone_number }}'; // Example value
+
+    // Set the initial value for the phone number input
+    document.getElementById('editPhoneNumber').value = initialPhoneNumber;
+}
+
+// Call the function to populate the dropdown when the page loads
+document.addEventListener('DOMContentLoaded', populateCountryCodes);

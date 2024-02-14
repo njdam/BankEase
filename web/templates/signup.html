@@ -17,18 +17,17 @@
         </div>
         <nav>
             <ul>
-                <li><a href="../templates/signin.html">Login</a></li>
+		    <li><a href="{{ url_for('signin') }}">Login</a></li>
             </ul>
         </nav>
     </header>
+    <hr>
     <h1>Welcome to BankEase</h1>
-    <marquee>
         <p id="p3"><b style="color: goldenrod;">Join bankease today</b> and step into a world of modern banking, where simplicity meets sophistication. Elevate your banking experience with us - <b style="color: greenyellow; font-family: 'Courier New', Courier, monospace;">Banking Simplified, Anytime, Anywhere.</b></p>
-    </marquee>
     <hr>
     <h2>Sign Up</h2>
     
-    <form action="/signup" method="post">
+    <form action="/register" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
     
@@ -55,17 +54,18 @@
     
         <label for="homeAddress">Home Address:</label>
         <input type="text" id="homeAddress" name="homeAddress" required>
-    
-        <label for="accountType">Account Type:</label>
-        <select id="accountType" name="accountType" required>
-            <option value="Current Account">Current Account</option>
-            <option value="Saving Account">Saving Account</option>
-            <option value="Fixed Account">Fixed Account</option>
-        </select>
-    
-        <button type="submit">Create Account</button>
+
+	<label for="accountType">Account Type:</label>
+
+	<select id="accountType" name="accountType" required>
+		<option value="" selected disabled hidden>Select an account type</option>
+		<option value="Current Account">Current Account</option>
+		<option value="Saving Account">Saving Account</option>
+		<option value="Fixed Account">Fixed Account</option>
+	</select>
+	<button type="submit">Create Account</button>
     </form>
+    
     <footer></footer>
     </body>
-    </html>
-    
+    </html> 

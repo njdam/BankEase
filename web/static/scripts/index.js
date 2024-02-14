@@ -1,28 +1,20 @@
 // Slide shows on landing page
-var slideIndex = 0;
+let slideIndex = 0;
+showSlides();
 
 function showSlides() {
-    var slides = document.getElementsByClassName("mySlides");
-
-    // Hide all slides
-    for (var i = 0; i < slides.length; i++) {
-        slides[i].classList.remove("show"); // Remove the "show" class
-    }
-
-    // Increment slide index
-    slideIndex++;
-
-    // Reset slide index if it exceeds the total number of slides
-    if (slideIndex > slides.length) {
-        slideIndex = 1;
-    }
-
-    // Display the current slide
-    slides[slideIndex - 1].classList.add("show"); // Add the "show" class
-
-    // Schedule the next slide after 2000 milliseconds (2 seconds)
-    setTimeout(showSlides, 2000);
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+  setTimeout(showSlides, 2000); // Change image every 2 seconds
 }
-
-// Run the slideshow when the page loads
-showSlides();
