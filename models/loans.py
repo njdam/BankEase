@@ -1,10 +1,23 @@
 #!/usr/bin/python3
 
 from models.base import BankEase
+from api.v1.app import db
 
 
-class Loan(BankEase):
+class Loan(db.Model, BankEase):
     """ A class to handle loan on BankEase System. """
+    __tablename__ = 'loans'
+
+    loan_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    amount = db.Column(db.DECIMAL(10, 2), nullable=False)
+    interest_rate = db.Column(db.DECIMAL(5, 2), nullable=False)
+    term_months = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # Define the relationship with the User model
+    #user = db.relationship('User', backref='loans')
 
     def __init__(self, user_id):
         """Initialisation of Loan info by user_id. """

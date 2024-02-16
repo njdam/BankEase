@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/styles/home.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/dashboard.css">
     <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
@@ -19,21 +19,18 @@
         <a href="#">Loans</a>
         <a href="#">Transfer</a>
         <a href="#">Pay Bill</a>
-        <a href="#" onclick="openProfileModal()">Profile</a>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
     </div>
 
     <div class="main-content" id="mainContent">
         <div class="header">
             <div class="menu-icon" onclick="openSidebar()">&#9776;</div>
             <div class="account-info">
-                <span>Account Number: {{ Account.account_number }}</span>
-                <!--<div class="account-dropdown-content" id="accountDropdown">
-                    <a href="#" onclick="switchAccount('Account1')">Account1</a>
-                    <a href="#" onclick="switchAccount('Account2')">Account2</a>
-                </div>-->
+                <span>{{ User.first_name }} {{ User.last_name }}</span>
             </div>
+	    <!--<button class="logout-btn" onclick="logout()"><a href="{{ url_for('logout') }}">Logout</a></button>-->
             <div class="profile-section" onclick="openProfilePage()">
-                <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture">
+                <a href="{{ url_for('profile') }}"><img src="../static/images/BankEase_Icon.gif" alt="Avatar" class="profile-picture"></a>
             </div>
         </div>
 
@@ -49,44 +46,6 @@
         <!-- Display recent transactions here -->
     </div>
 </div>
-
-<!-- Profile modal -->
-<div class="profile-modal" id="profileModal">
-    <h2>Edit Profile</h2>
-    <label for="editUsername">Username:</label>
-    <input type="text" id="editUsername" value="{{ User.username }}" disabled>
-
-    <label for="editFirstName">First Name:</label>
-    <input type="text" id="editFirstName" value='{{ User.first_name }}'>
-
-    <label for="editLastName">Last Name:</label>
-    <input type="text" id="editLastName" value="{{ User.last_name }}">
-
-    <label for="editEmail">Email:</label>
-    <input type="email" id="editEmail" value="{{ User.email }}">
-
-    <label for="editPhoneNumber">Phone Number:</label>
-    <div class="phone-number-input">
-        <select id="countryCode" name="countryCode"></select>
-        <input type="tel" id="editPhoneNumber" name="editPhoneNumber" value="{{ User.phone_number }}" placeholder="Enter your phone number">
-    </div>
-    <input type="email" id="editPhoneNumber" value="{{ User.country }}">
-    
-    <label for="editCountry">Country:</label>
-    <input type="email" id="editCountry" value="{{ User.country }}">
-
-    <label for="editCity">City:</label>
-    <input type="email" id="editCity" value="{{ User.city }}">
-
-    <label for="editHomeAddress">Home Address:</label>
-    <input type="email" id="editHomeAddress" value="{{ User.home_address }}">
-
-    <label for="editProfilePic">Profile Picture:</label>
-    <input type="file" id="editProfilePic">
-
-    <button onclick="saveProfileChanges()">Save Changes</button>
-    <button class="discard" onclick="discardChanges()">Discard Changes</button>
-</div>
-<script src="../static/scripts/home.js"></script>
+<script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 </body>
 </html>

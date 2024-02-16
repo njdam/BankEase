@@ -175,3 +175,23 @@ footer a {
     text-decoration: none;
     display: table-footer-group;
 }
+
+.about-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: row; /* Make columns side by side */
+    align-items: center; /* Center vertically */
+}
+
+.about-container img {
+    max-width: 100px; /* Ensure the image doesn't overflow its container */
+    margin-right: 20px; /* Add some space between image and text */
+}
+
+.about-container p {
+    flex: 1; /* Allow the paragraph to grow and fill remaining space */
+}
+
+section#about h2 {
+    text-align: center;
+}

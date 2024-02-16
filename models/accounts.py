@@ -2,10 +2,22 @@
 
 from models.base import BankEase
 from models.transactions import Transaction
+from api.v1.app import db
 
 
-class Account(Transaction):
+class Account(db.Model, BankEase):
     """ A class to create BankEase account information by user. """
+    __tablename__ = 'accounts'
+
+    account_number = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    account_type = db.Column(db.String(50), nullable=False)
+    balance = db.Column(db.DECIMAL(10, 2), default=0.00)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # Define the relationship with the User model
+    #user = db.relationship('User', backref='accounts')
+    transactions = db.relationship('Transaction', backref='accounts')
 
     def __init__(self, user_id):
         """ Initialisation of Account information for the User. """
@@ -13,7 +25,6 @@ class Account(Transaction):
         self.user_id = user_id
         self.account_type = None
         self.balance = 0
-        super().__init__(self.account_number)
 
     @classmethod
     def create_account(cls, user_id, account_type, balance=0.0):

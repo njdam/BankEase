@@ -1,10 +1,22 @@
 #!/usr/bin/python3
 
 from models.base import BankEase
+from api.v1.app import db
 
 
-class Transaction(BankEase):
+class Transaction(db.Model, BankEase):
     """ A class to handle all transaction of a BankEase system. """
+    __tablename__ = 'transactions'
+
+    transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    account_number = db.Column(db.BigInteger, db.ForeignKey('accounts.account_number'), nullable=False)
+    type = db.Column(db.String(250), nullable=False)
+    amount = db.Column(db.DECIMAL(10, 2), nullable=False)
+    balance = db.Column(db.DECIMAL(10, 2), nullable=False)
+    timestamp = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
+
+    # Define the relationship with the Account model
+    # account = db.relationship('Account', backref='transactions')
 
     def __init__(self, account_number):
         """ Initialisation of Transaction history by Account_number. """

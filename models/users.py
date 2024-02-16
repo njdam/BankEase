@@ -6,21 +6,31 @@ from models.loans import Loan
 import mysql.connector
 import json
 from flask_sqlalchemy import SQLAlchemy  # Import SQLAlchemy
-from flask_login import UserMixin
-from auth import login_manager
-
-db = SQLAlchemy()
+from flask_login import UserMixin, AnonymousUserMixin
+from api.v1.app import db, login_manager
 
 
-class User(db.Model, Account, Loan, UserMixin):
+class User(db.Model, UserMixin, BankEase):
     """A function which create a user for BankEase System."""
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    __tablename__ = 'users'  # Specify the table name explicitly
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(250), unique=True, nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+    first_name = db.Column(db.String(255))
+    last_name = db.Column(db.String(255))
+    email = db.Column(db.String(255), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    country = db.Column(db.String(255))
+    city = db.Column(db.String(255))
+    home_address = db.Column(db.String(255))
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    accounts = db.relationship('Account', backref='user', lazy=True)
+    loans = db.relationship('Loan', backref='user', lazy=True)
 
     def __init__(self, username, password):
         """ User initialisation """
-        self.user_id = self.id
         self.username = username
         self.password = self.hash_password(password)
         self.first_name = None
@@ -33,8 +43,14 @@ class User(db.Model, Account, Loan, UserMixin):
         self.is_admin = False
         self.created_at = None
         super(User, self).__init__() # Call the constructor of db.Model
-        Account.__init__(self, user_id=self.id)  # Call the constructor of Account
-        Loan.__init__(self, user_id=self.id)  # Call the constructor of Loan
+
+    @staticmethod
+    def username_exists(username):
+        user_info = User.get_user_by_username(username)
+        if user_info:
+            return 1
+        else:
+            return 0
 
     @property
     def is_active(self):
@@ -42,23 +58,28 @@ class User(db.Model, Account, Loan, UserMixin):
 
     def get_id(self):
         """Return the user's ID as a unicode string."""
-        return str(self.id)
+        return str(self.user_id)
 
     def get_account(self):
         """ Get the associated account for this user. """
-        query = 'SELECT * FROM accounts WHERE user_id = %s'
-        values = (self.user_id,)  # user_id is stored in the User instance
-        account_info = self.execute_query(query, values)
-
-        if account_info:
-            account_data = account_info[0]
-            account_instance = Account(user_id=account_data['user_id'])
-            # Set attributes for the Account instance
-            for key, value in account_data.items():
-                setattr(account_instance, key, value)
-            return account_instance
+        if not isinstance(self, AnonymousUserMixin):
+            query = 'SELECT * FROM accounts WHERE user_id = %s'
+            if hasattr(self, 'user_id') and self.user_id is not None:
+                values = (self.user_id,)
+                account_info = self.execute_query(query, values)
+                if account_info:
+                    account_data = account_info[0]
+                    account_instance = Account(user_id=account_data['user_id'])
+                    # Set attributes for the Account instance
+                    for key, value in account_data.items():
+                        setattr(account_instance, key, value)
+                    return account_instance
+                else:
+                    pass
+            else:
+                pass
         else:
-            raise Exception("No account found for this user.")
+            pass
 
     @classmethod
     def signin(cls, username, password):
@@ -79,7 +100,6 @@ class User(db.Model, Account, Loan, UserMixin):
         """ Input of user information to create new user. """
         while True:
             try:
-                cls.create_user_table()
                 cls.create_user(
                     username, password, first_name, last_name,
                     email, phone_number,
@@ -87,7 +107,7 @@ class User(db.Model, Account, Loan, UserMixin):
                     )
 
                 print("Account created successfully!")
-                break
+                return (1)
             except mysql.connector.Error as err:
                 if err.errno == 1062:  # Duplicate entry error
                     print(f"Error: Username '{username}' already exists. Please choose a different username.")
@@ -116,27 +136,6 @@ class User(db.Model, Account, Loan, UserMixin):
         except Exception as e:
             print(f"Error: {e}")
     
-    @classmethod
-    def create_user_table(cls):
-        """ A function to create table users in mysql database. """
-        query = '''
-        CREATE TABLE IF NOT EXISTS users (
-        user_id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(250) UNIQUE NOT NULL,
-        password VARCHAR(250) NOT NULL,
-        first_name VARCHAR(255),
-        last_name VARCHAR(255),
-        email VARCHAR(255) NOT NULL,
-        phone_number VARCHAR(20) NOT NULL,
-        country VARCHAR(255),
-        city VARCHAR(255),
-        home_address VARCHAR(255),
-        is_admin BOOLEAN DEFAULT FALSE, -- Customer or Admin
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-        '''
-        cls.execute_query(query, multi=True)
-
     @classmethod
     def create_user(cls, username, password, first_name, last_name, email, phone_number, country, city, home_address, account_type, is_admin=False):
         """ A function to create a new user account. """

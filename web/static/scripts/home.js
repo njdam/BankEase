@@ -30,10 +30,10 @@ function openProfilePage() {
 }
 
 function logout() {
+    // Redirect to the logout route using Flask's url_for function
+    window.location.href = '{{ url_for("logout") }}';
     // Implement logic for logout
     alert('Logged out!');
-    // Redirect to the login page or any other desired action
-    window.location.href = '{{ url_for("logout") }}';
 }
 
 function switchAccount(accountName) {

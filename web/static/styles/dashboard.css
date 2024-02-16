@@ -13,8 +13,8 @@ body {
     width: 0;
     overflow-x: hidden;
     transition: 0.5s;
-    background-color: #333;
-    color: #fff;
+    background-color: #034ea2;
+    color: #555;
     padding-top: 60px;
     position: fixed;
     height: 100%;
@@ -24,13 +24,13 @@ body {
     padding: 10px 15px;
     text-decoration: none;
     font-size: 18px;
-    color: #818181;
+    color: #fff;
     display: block;
     transition: 0.3s;
 }
 
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: #333;
 }
 
 .menu-icon {
