@@ -2,11 +2,10 @@
 """ Starting Flask Web Application. """
 
 import sys
-sys.path.append('/home/jeandamn/BankEase')
+sys.path.append('/home/ubuntu/BankEase')
 from crypt import methods
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, UserMixin, current_user, logout_user, login_required
-from flask import flash
 from forms import LoginForm
 from models.users import User
 from api.v1.app import app, login_manager
@@ -39,6 +38,8 @@ def signin():
 def login():
     username = request.form['username']
     password = request.form['password']
+    if not username or not password:
+        return render_template('signin.html', error='Username and password are required')
 
     user_instance = User.query.filter_by(username=username).first()
     # user_instance = User.signin(username, password)
@@ -51,11 +52,13 @@ def login():
 
     if user_instance and checkpw(encoded_password, encoded_stored):
         login_user(user_instance)
+        return render_template('signin.html', error='Login successful')
         # Redirect to the dashboard for the given user
         account_instance = User.get_account(user_instance)
         # Render the dashboard for the given user with user and account data
         return redirect(url_for('dashboard'))
     else:
+        return render_template('signin.html', error='Login failed')
         # Handle invalid login (e.g., show an error message)
         return render_template('signin.html', error='Invalid username or password')
 

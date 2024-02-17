@@ -6,17 +6,23 @@ server {
         root /var/www/html;
         index index.html index.htm index.nginx-debian.html;
 
-        server_name bankease.com;
+        server_name bankease.jeandamn.tech www.jeandamn.tech;
 
         location / {
-                proxy_pass http://localhost:5000/;
+                proxy_pass http://localhost:5002/;
 
                 add_header X-Served-By $hostname;
         }
 
         location /static/ {
                 # rewrite ^(/static/[^?]*)\?.*$ $1 last; # This like alias
-                alias /home/ubuntu/AirBnB_clone_v4/web/static/;
+                alias /home/ubuntu/BankEase/web/static/;
+                try_files $uri $uri/ =404;
+        }
+
+	location /templates/ {
+                # rewrite ^(/static/[^?]*)\?.*$ $1 last; # This like alias
+                alias /home/ubuntu/BankEase/web/templates/;
                 try_files $uri $uri/ =404;
         }
 

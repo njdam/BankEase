@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn instance to serve web/app.py for BankEase by njdam
+After=network.target gunicorn.socket
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/BankEase
+ExecStart=/home/ubuntu/BankEase/bin/gunicorn --workers 3 --error-logfile /tmp/bankease-error.log --access-logfile /tmp/bankease-access.log --bind 0.0.0.0:5001 web.app:app
+ExecStartPost=/usr/bin/tmux new-session -d '/home/ubuntu/BankEase/bin/gunicorn --workers 3 --error-logfile /tmp/bankease-error.log --access-logfile /tmp/bankease-access.log --bind 0.0.0.0:5002 web.app:app'
+Restart=always
+RuntimeDirectory=gunicorn
+RuntimeDirectoryMode=755
+
+[Install]
+WantedBy=multi-user.target
