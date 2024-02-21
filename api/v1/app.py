@@ -12,8 +12,8 @@ import os
 
 app = Flask(
     __name__,
-    template_folder='/home/jeandamn/BankEase/web/templates',
-    static_folder='/home/jeandamn/BankEase/web/static'
+    template_folder='/home/ubuntu/BankEase/web/templates',
+    static_folder='/home/ubuntu/BankEase/web/static'
 )
 
 # Configure the database
@@ -30,7 +30,6 @@ try:
 
     # Construct the database URL
     DATABASE_URL = f'{db_type}+{db_connector}://{username}:{password}@{host}:{port}/{db_name}'
-    print(f'DATABASE_URL: {DATABASE_URL}')  # Add this line for debugging
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 except Exception as e:
     print(f'Error retrieving environment variables: {e}')
