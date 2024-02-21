@@ -87,3 +87,18 @@ pip install bankease
 ### Security
 
 BankEase prioritizes the security of your financial information. All communication is encrypted using industry-standard protocols.
+
+### About Me
+
+I'm Biomedical Laboratory Scientist who started learning Software Engineering without computer background, now I'm in final stage of foundation program in full stack software engineering program with my effort of doing hard things for better future.
+
+I have started from nowhere without knowing where to start and which file to create first, which programming languages to be used or any technical tools to be used but now I'm ready for doing anything new in software engineering.
+
+In Portfolio project as solo developer, I have learned many things about time management, working on different things in short time, to work in extra-time in order to finish on time. Generally, I have learned about how to face the problem and how to solve it in a certain time.
+
+LinkedIn: Jean Damascene Ngaboyimana
+Instagram: https://lnkd.in/dGTg2pJu
+Twitter (X): https://lnkd.in/dt-qCJ9H
+Facebook: https://lnkd.in/dQHVZg52
+YouTube: https://lnkd.in/dVGRReSd
+BankEase: https://lnkd.in/dP-NFp5U
