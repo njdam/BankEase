@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="#">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
+    <title>BankEase</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        header {
+            background-color: #034ea2;
+            top: 0;
+            color: white;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            height: 80px;
+            width: 100%;
+        }
+
+        .logo-container img {
+            max-height: 40px;
+            width: 100%;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        a:hover {
+            color: #ffd700;
+        }
+
+        .menu-icon {
+            display: none;
+        }
+
+        .menu-popup {
+            display: none;
+        }
+
+        .copyright {
+            font-family: 'Courier New', Courier, monospace;
+            font-style: italic;
+            position: fixed;
+            bottom: 50px;
+            width: 100%;
+            color: grey;
+            padding: 2px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #034ea2;
+            color: black;
+            display: flex;
+            border-top: 2px solid #000;
+            justify-content: center;
+            justify-items: baseline;
+            position: fixed;
+            max-height: 50px;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer ul {
+            list-style: none;
+            color: #fff;
+            display: flex;
+            gap: 30px;
+            cursor: pointer;
+            bottom: 10px;
+        }
+
+        footer ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        /* Media Query for small screens */
+        @media only screen and (max-width: 800px) {
+            nav a {
+                display: none;
+            }
+
+            .menu-icon {
+                display: block;
+                font-size: xx-large;
+                margin-right: 10px;
+                text-align: center;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+            button {
+                max-height: 50px;
+                width: 60px;
+            }
+
+            .menu-popup {
+                display: none;
+                position: fixed;
+                margin-left: -40px;
+                top: 90px;
+                width: 100%;
+                z-index: 1000;
+            }
+
+            .project, .menu-popup a {
+                background-color: gray;
+                border: 2px solid wheat;
+                text-emphasis-style: bold;
+                border-radius: 5px;
+                padding: 1%; /* Adjust padding as needed */
+                padding-right: calc(78%);
+                /*padding-right: 500px; /\* Adjust padding as needed for width of border */
+            }
+
+            .menu-popup ul {
+                list-style: none;
+            }
+
+            .menu-popup a {
+                text-decoration: none;
+                color: #034ea2;
+                font-style: bold;
+            }
+
+            .menu-popup a:hover {
+                color: yellow;
+            }
+        }
+
+        /* COVER IMAGE SECTION */
+        section#cover_image img {
+            max-width: 100%;
+            background-color: gainsboro;
+            margin-bottom: -12px;
+        }
+
+        /* FEATURES SECTION */
+        section#features img {
+            max-width: 100%;
+            border-radius: 5px;
+            display: inline;
+            justify-content: center;
+            border-style: groove;
+        }
+
+        section#features iframe {
+            width: 750px;
+            height: 480px;
+            padding-left: 2%;
+        }
+
+        section#features h2 {
+            text-align: center;
+        }
+
+        /* ABOUT SECTION */
+        section#about {
+            padding-bottom: 50px;
+        }
+        .about-container {
+            margin: 20px;
+            display: flex;
+            flex-direction: row; /* Make columns side by side */
+            align-items: center; /* Center vertically */
+        }
+
+        .about-container img {
+            max-width: 150px; /* Ensure the image doesn't overflow its container */
+            margin-right: 20px; /* Add some space between image and text */
+        }
+
+        .about-container p {
+            flex: 1; /* Allow the paragraph to grow and fill remaining space */
+        }
+
+        section#about h2 {
+            text-align: center;
+        }
+
+        .portfolio h2, p {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER OPTIONS -->
+    <header>
+        <div class="logo-container">
+            <img src="../static/images/bankease_logo.png" alt="BankEase Logo">
+        </div>
+        <nav>
+            <ul>    
+                <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="http://bankease.jeandamn.tech">BankEase</a></li>
+            </ul>
+        </nav>
+        <button class="menu-icon" onclick="toggleMenu()">&#9776;</button>
+        <div class="menu-popup" id="menuPopup">
+            <ul>
+                <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
+                <br>
+                <li><a href="#features" onclick="toggleMenu()">Features</a></li>
+                <br>
+                <li><a class="project" href="http://bankease.jeandamn.tech" onclick="toggleMenu()">BankEase</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- LARGE COVER IMAGE SESSION -->
+    <section id="cover_image">
+        <div>
+            <img src="../static/images/house_backgound_illist.png" alt="CoverImage">
+        </div>
+    </section>
+    <section class="portfolio">
+        <hr>
+        <h2>BankEase: Modern Banking Online Solution</h2>
+        <p id="p1">Welcome to BankEase, your gateway to a <b style="color: blueviolet;">Modern Banking Online Solution</b>, where banking is not just a transaction but an experience. With Banking Simplified, Anytime, Anywhere, BankEase brings convenience and innovation to your fingertips. the freedom of seamless transactions with BankEase. Transfer money effortlessly, withdraw cash at your convenience, and pay bills online with the click of a button. Our user-friendly interface ensures a smooth and secure banking experience, allowing you to manage your finances with ease.</p>
+        <hr>
+    </section>
+
+    <!-- BankEase FEATURES -->
+    <section id="features">
+        <h2>BankEase Home Feature</h2>
+        <img src="../static/images/bankease_home.png" alt="BankEase Home">
+        <h2>BankEase Login Feature</h2>
+        <img src="../static/images/bankease_login.png" alt="BankEase Signin">
+        <h2>BankEase Signup Feature</h2>
+        <img src="../static/images/bankease_signup.png" alt="BankEase Signin">
+        <!-- YOUTUBE VIDEO ABOUT BANKEASE -->
+        <h2>BankEase Demo</h2>
+        <iframe src="https://www.youtube.com/embed/J9iUPI8QLMA" title="BankEase Portfolio Project Web Application Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </section>
+
+    <!-- ABBOUT SESSION -->
+    <section id="about" class="description" role="contentinfo">
+        <hr>
+        <h2>About</h2>
+        <a href="https://github.com/njdam/BankEase">BankEase Github Repo</a>
+        <div class="about-container">
+            <img src="../static/images/jeandamn.jpg" alt="Jean Damascene Ngaboyimana">
+            <p>
+                My name is Jean Damascene Ngaboyimana from Rwanda, the land of a thousand hills. I am a Full Stack Developer and a Biomedical Laboratory Scientist. I studied software engineering in the Alx Program, starting as a beginner without a programming background. Today, I proudly present the BankEase project, my first solo Full Stack Developer endeavor.
+                <a href="https://www.linkedin.com/in/jeandamn">LinkedIn</a>
+                <a href="https://www.instagram.com/cr7vanjohnson">Instagram</a>
+                <a href="https://www.twitter.com/cr7vanjohnson">Twitter</a>
+                <a href="https://www.facebook.com/cr7vanjohnson">Facebook</a>
+                <a href="https://www.youtube.com/c/damshowtv">YouTube</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER OPTIONS -->
+    <footer>
+        <ul>
+            <li><a href="#home" class="back-to-top" onclick="scrollToTop()">Back to Top</a></li>
+            <li><a href="https://www.linkedin.com/in/jeandamn">LinkedIn</a></li>
+            <li><a href="https://www.instagram.com/cr7vanjohnson">Instagram</a></li>
+            <li><a href="https://www.twitter.com/cr7vanjohnson">Twitter</a></li>
+            <li><a href="https://www.facebook.com/cr7vanjohnson">Facebook</a></li>
+            <li><a href="https://www.youtube.com/c/damshowtv">YouTube</a></li>
+        </ul>
+    </footer>
+    <div class="copyright"><b>Copyright &copy; 2024 BankEase. All rights reserved</b></div>
+
+    <script>
+        function toggleMenu() {
+            var menuPopup = document.getElementById("menuPopup");
+            menuPopup.style.display = (menuPopup.style.display === "block") ? "none" : "block";
+        }
+
+        window.onscroll = function () {
+            var backToTop = document.querySelector('.back-to-top');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTop.style.display = "block";
+            } else {
+                backToTop.style.display = "none";
+            }
+        };
+
+        function scrollToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+
+</body>
+
+</html>
