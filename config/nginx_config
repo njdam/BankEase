@@ -2,14 +2,61 @@
 server {
         listen 80 default_server;
         listen [::]:80 default_server;
+	server_name bankease.jeandamn.tech www.jeandamn.tech web-02.jeandamn.tech;
 
-        root /var/www/html;
-        index index.html index.htm index.nginx-debian.html;
+	# Redirect HTTP to HTTPS
+	return 301 https://$host$request_uri;
+}
 
-        server_name bankease.jeandamn.tech www.jeandamn.tech;
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	server_name bankease.jeandamn.tech www.jeandamn.tech web-02.jeandamn.tech;
+
+	ssl_certificate /etc/letsencrypt/live/bankease.jeandamn.tech/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/bankease.jeandamn.tech/privkey.pem;
+
+	# Other SSL settings, such as SSL protocols and ciphers, can be added here
 
         location / {
+                proxy_pass http://localhost:5001/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /signin {
                 proxy_pass http://localhost:5002/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /login {
+                proxy_pass http://localhost:5002/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /signup {
+                proxy_pass http://localhost:5003/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /register {
+                proxy_pass http://localhost:5003/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /dashboard {
+                proxy_pass http://localhost:5004/;
+
+                add_header X-Served-By $hostname;
+        }
+
+	location /profile {
+                proxy_pass http://localhost:5004/;
 
                 add_header X-Served-By $hostname;
         }
@@ -21,15 +68,13 @@ server {
         }
 
 	location /templates/ {
-                # rewrite ^(/static/[^?]*)\?.*$ $1 last; # This like alias
                 alias /home/ubuntu/BankEase/web/templates/;
                 try_files $uri $uri/ =404;
         }
 
         location /api/ {
-                proxy_pass http://localhost:5002;
-
-                add_header X-Served-By $hostname;
+		alias /home/ubuntu/BankEase/api/v1/;
+                try_files $uri $uri/ =404;
         }
 
         if ($request_filename ~ redirect_me){
