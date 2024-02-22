@@ -96,7 +96,7 @@ I have started from nowhere without knowing where to start and which file to cre
 
 In Portfolio project as solo developer, I have learned many things about time management, working on different things in short time, to work in extra-time in order to finish on time. Generally, I have learned about how to face the problem and how to solve it in a certain time.
 
-LinkedIn: Jean Damascene Ngaboyimana
+LinkedIn: https://www.linkedin.com/in/jeandamn
 Instagram: https://lnkd.in/dGTg2pJu
 Twitter (X): https://lnkd.in/dt-qCJ9H
 Facebook: https://lnkd.in/dQHVZg52
