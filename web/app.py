@@ -29,6 +29,10 @@ app.url_map.strict_slashes = False
 def index():
     return render_template('index.html')
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route('/signin')
 def signin():
     # Sigin Page
@@ -52,7 +56,6 @@ def login():
 
     if user_instance and checkpw(encoded_password, encoded_stored):
         login_user(user_instance)
-        return render_template('signin.html', error='Login successful')
         # Redirect to the dashboard for the given user
         account_instance = User.get_account(user_instance)
         # Render the dashboard for the given user with user and account data
@@ -121,10 +124,14 @@ def create_account():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-@app.errorhandler(500)
-def internal_server_error(e):
+@app.route('/500.html/')
+def internal_server_error():
     return render_template('500.html'), 500
+
+@app.route('/502.html/')
+def bad_request():
+    return render_template('502.html'), 502
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8000)

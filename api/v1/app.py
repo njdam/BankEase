@@ -61,4 +61,4 @@ login_manager.login_view = 'signin'  # Specify the login view for redirecting un
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

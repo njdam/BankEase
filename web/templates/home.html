@@ -61,7 +61,7 @@
             <span class="dot"></span> 
             <span class="dot"></span> 
         </div>
-	    <p id="p1">Welcome to BankEase, your gateway to a <b style="color: blueviolet;">Modern Banking Online Solution</b>, where banking is not just a transaction but an experience. With Banking Simplified, Anytime, Anywhere, BankEase brings convenience and innovation to your fingertips. the freedom of seamless transactions with BankEase. Transfer money effortlessly, withdraw cash at your convenience, and pay bills online with the click of a button. Our user-friendly interface ensures a smooth and secure banking experience, allowing you to manage your finances with ease.</p>
+        <p id="p1">Welcome to BankEase, your gateway to a <b style="color: blueviolet;">Modern Banking Online Solution</b>, where banking is not just a transaction but an experience. With Banking Simplified, Anytime, Anywhere, BankEase brings convenience and innovation to your fingertips. the freedom of seamless transactions with BankEase. Transfer money effortlessly, withdraw cash at your convenience, and pay bills online with the click of a button. Our user-friendly interface ensures a smooth and secure banking experience, allowing you to manage your finances with ease.</p>
     </section>
     <section class="description" role="contentinfo">
         <div class="container">
@@ -69,7 +69,7 @@
 		        <h3>World of Cashless</h3>
 		        <p id="p2">Say goodbye to traditional hassles and embrace the cashless era with BankEase. Whether you're on the go or relaxing at home, our platform empowers you to take control of your finances whenever and wherever you are.</p>
             </div>
-            <div class="column">
+            <div] class="column">
 		        <h3>Register To Day</h3>
                 <p id="p3"><b style="color: blueviolet;">Join bankease today</b> and step into a world of modern banking, where simplicity meets sophistication. Elevate your banking experience with us - <b style="color: #000; font-family: 'Courier New', Courier, monospace;">Banking Simplified, Anytime, Anywhere.</b></p>
             </div>
@@ -81,8 +81,8 @@
     <footer>
         <nav>
             <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#license">License</a></li>
+                <li><a href="#welcome" onclick="scrollToSection('hero')">BackToTop</a></li>
+		<li><a href="{{ url_for('index') }}">About</a></li>
                 <li><a href="https://www.linkedin.com/in/jeandamn">LinkedIn</a></li>
                 <li><a href="https://www.instagram.com/cr7vanjohnson">Instagram</a></li>
                 <li><a href="https://www.twitter.com/cr7vanjohnson">Twitter</a></li>
@@ -90,7 +90,7 @@
                 <li><a href="https://www.youtube.com/c/damshowtv">YouTube</a></li>
             </ul>
         </nav>
-	<p>&copy; 2024 BankEase. All rights reserved.</p>
+        <!--<p>&copy; 2024 BankEase. All rights reserved.</p>-->
     </footer>
 
     <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>

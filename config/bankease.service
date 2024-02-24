@@ -1,0 +1,16 @@
+[Unit]
+Description=Gunicorn instance to serve web/app.py for BankEase by njdam and using of --preload to allow Flask-login
+After=network.target bankease.socket
+
+[Service]
+User=ubuntu
+Group=www-data
+Environment="PYTHONPATH=/home/ubuntu/BankEase"
+WorkingDirectory=/home/ubuntu/BankEase
+ExecStart=/home/ubuntu/BankEase/bin/gunicorn --workers 4 --error-logfile /tmp/bankease-error.log --access-logfile /tmp/bankease-access.log --bind 0.0.0.0:8000 web.app:app --preload --log-level debug
+Restart=always
+RuntimeDirectory=gunicorn
+RuntimeDirectoryMode=755
+
+[Install]
+WantedBy=multi-user.target
