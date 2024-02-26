@@ -81,6 +81,22 @@ class User(db.Model, UserMixin, BankEase):
         else:
             pass
 
+    def get_loans(self):
+        """ Get the associated loans for this user. """
+        if not isinstance(self, AnonymousUserMixin):
+            query = 'SELECT * FROM loans WHERE user_id = %s'
+            if hasattr(self, 'user_id') and self.user_id is not None:
+                values = (self.user_id,)
+                loan_info = self.execute_query(query, values)
+                if loan_info:
+                    return loan_info
+                else:
+                    return None
+            else:
+                pass
+        else:
+            pass
+
     @classmethod
     def signin(cls, username, password):
         """ Signin for accessing user information. """

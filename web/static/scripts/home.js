@@ -1,4 +1,25 @@
 // Dashboard js file
+// var sidebarOpen = false;
+function toggleSidebar() {
+	if (sidebarOpen) {
+		closeSidebar();
+	} else {
+		openSidebar();
+	}
+}
+/*
+function openSidebar() {
+	// Your code to open the sidebar
+	console.log('Sidebar opened');
+	sidebarOpen = true;
+}
+
+function closeSidebar() {
+	// Your code to close the sidebar
+	console.log('Sidebar closed');
+	sidebarOpen = false;
+}
+*/
 function openSidebar() {
     document.getElementById("mySidebar").style.width = "250px";
     document.getElementById("mainContent").style.marginLeft = "250px";

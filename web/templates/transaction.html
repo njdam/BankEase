@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+</head>
+<body>
+
+<h1>Transaction History</h1>
+{% if transactions %}
+    {% for transaction in transactions %}
+        <p>Transaction ID: {{ transaction.id }}</p>
+        <p>Amount: {{ transaction.amount }}</p>
+        <!-- Add more transaction details as needed -->
+    {% endfor %}
+{% else %}
+    <p>No Transaction</p>
+{% endif %}
+
+</body>
+</html>

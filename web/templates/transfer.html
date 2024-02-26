@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfers</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Transfers</h1>
+
+<form action="{{ url_for('transfer', user_id=user_id) }}" method="post">
+    <label for="account_number">Recipient Account Number:</label>
+    <input type="text" id="account_number" name="account_number" required>
+
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount" required>
+
+    <button type="submit">Transfer</button>
+</form>
+{% if transfers %}
+    <p>{{ transfers | replace("\n", "<br>") }}</p>
+{% endif %}
+<!--
+{% for transfer in transfers %}
+    <p>Transfer ID: {{ transfer.id }}</p>
+    <p>Amount: {{ transfer.amount }}</p>-->
+    <!-- Add more transfer details as needed -->
+    <!--
+{% endfor %}
+-->
+</body>
+</html>

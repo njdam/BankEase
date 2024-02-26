@@ -81,6 +81,17 @@ class Account(db.Model, BankEase):
         else:
             raise Exception("Account number doesn't exists!")
 
+    def get_transactions(self):
+        """ Retrieving Transaction info by account_number. """
+        query = 'SELECT * FROM transactions WHERE account_number = %s'
+        values = (self.account_number,)
+        transactions = self.execute_query(query, values)
+        if transactions:
+            return transactions
+        else:
+            return None
+            # raise Exception("No transactions!")
+
     def update_balance(self):
         """ Update the balance in the database. """
         query = 'UPDATE accounts SET balance = %s WHERE account_number = %s'
@@ -104,11 +115,12 @@ class Account(db.Model, BankEase):
             values = (self.account_number, transaction_type, amount, self.balance)
             self.execute_query(query, values)
             # save updated user information
-            print(f"Deposited ${amount} at {self.account_number}.")
-            print(f"Current Balance: ${self.balance}")
+            deposits = f"Deposited ${amount} at {self.account_number}.\nCurrent Balance: ${self.balance}"
 
         except Exception as e:
-            raise Exception(f"Failed to deposit: {e}")
+            deposits = f"Failed to deposit: {e}"
+
+        return (deposits)
 
     def withdraw(self, amount):
         """A function to withdraw amount of money."""
@@ -131,13 +143,16 @@ class Account(db.Model, BankEase):
                         amount, self.balance
                         )
                 self.execute_query(query, values)
-                print(f"Withdrawn ${amount} at {self.account_number}.")
-                print(f"Current Balance: ${self.balance}")
+                withdrawns = f"Withdrawn ${amount} at {self.account_number}.\nCurrent Balance: ${self.balance}"
             else:
-                raise Exception(f"Insuficient Funds!")
+                withdrawns = "Insuficient Funds!"
+
+            return (withdrawns)
 
         except Exception as e:
-            raise Exception(f"Failed to withdraw: {e}")
+            withdrawns = f"Failed to withdraw: {e}"
+
+        return (withdrawns)
 
     def transfer(self, account_number, amount):
         """A function to transfer amount of money to another user."""
@@ -178,12 +193,14 @@ class Account(db.Model, BankEase):
                         amount, recipient.balance
                         )
                 self.execute_query(query, values)
-
-                print(f"{self.account_number}(You) Transferred ${amount} to {recipient.account_number}.")
-                print(f"Current Balance: ${self.balance}")
+                transfers = f"{self.account_number}(You) Transferred ${amount} to {recipient.account_number}.\nCurrent Balance: ${self.balance}"
 
             else:
-                raise Exception(f"Insuficient Funds!")
+                transfers = "Insuficient Funds!"
+            
+            return (transfers)
 
         except Exception as e:
-            raise Exception(f"Failed to Transfer: {e}")
+            transfers = f"Failed to Transfer: {e}"
+
+        return (transfers)

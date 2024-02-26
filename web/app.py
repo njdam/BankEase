@@ -4,13 +4,25 @@
 import sys
 sys.path.append('/home/ubuntu/BankEase')
 from crypt import methods
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import login_user, UserMixin, current_user, logout_user, login_required
+from flask_mail import Mail, Message
+from itsdangerous import Serializer
 from forms import LoginForm
 from models.users import User
-from api.v1.app import app, login_manager
+from models.accounts import Account
+from api.v1.app import app, login_manager, db
 from werkzeug.security import check_password_hash
 from bcrypt import checkpw
+from werkzeug.utils import secure_filename
+from functools import wraps
+import os
+
+app.config['UPLOAD_FOLDER'] = 'static/uploads'  # Choose an appropriate folder for uploads
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -24,6 +36,18 @@ def load_user(user_id):
         return None
 
 app.url_map.strict_slashes = False
+
+from flask_login import current_user
+
+# Definition of admin required
+def admin_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if current_user.is_authenticated and current_user.is_admin:
+            return view(*args, **kwargs)
+        else:
+            abort(403)  # Forbidden
+    return wrapped_view
 
 @app.route('/')
 def index():
@@ -42,28 +66,130 @@ def signin():
 def login():
     username = request.form['username']
     password = request.form['password']
-    if not username or not password:
-        return render_template('signin.html', error='Username and password are required')
+    user_instance = User.query.filter_by(username=username, is_admin=False).first()
+    if user_instance is None:
+        # Handle the case where the user is not found or is not an admin
+        flash('Invalid Username or Password!', 'error')
+        return redirect(url_for('signin'))
 
-    user_instance = User.query.filter_by(username=username).first()
-    # user_instance = User.signin(username, password)
-    # if user_instance and check_password_hash(user_instance.password, password):
     # Entered Password
     encoded_password = password.encode('utf-8')
     # Stored Hashed Password
     stored_password = user_instance.password
     encoded_stored = stored_password.encode('utf-8')
 
-    if user_instance and checkpw(encoded_password, encoded_stored):
+    if checkpw(encoded_password, encoded_stored):
         login_user(user_instance)
         # Redirect to the dashboard for the given user
-        account_instance = User.get_account(user_instance)
-        # Render the dashboard for the given user with user and account data
         return redirect(url_for('dashboard'))
     else:
-        return render_template('signin.html', error='Login failed')
         # Handle invalid login (e.g., show an error message)
-        return render_template('signin.html', error='Invalid username or password')
+        flash('Invalid Username or Password!', 'error')
+
+        return redirect(url_for('signin'))
+
+# Sample Flask route for Forgot Password
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        # Check if the email exists in your database
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            # If yes, generate a unique token and send a reset email
+            token = generate_reset_token(user)
+            # Include a link in the email with the token, leading to the password reset page
+            send_reset_email(user, token)
+            flash('A password reset link has been sent.', 'info')
+
+        else:
+            flash('Email not found. Please check your email address and try again.', 'danger')
+
+        return redirect(url_for('login'))
+
+    return render_template('forgot_password.html')
+
+# Sample Flask route for Password Reset
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    # Verify the token and get the associated user
+    user = verify_reset_token(token)
+    # Check if the token is still valid (not expired)
+    if not user:
+        flash('Invalid or expired reset token. Please try again.', 'danger')
+        return redirect(url_for('forgot_password'))
+
+    if request.method == 'POST':
+        # Update the user's password in the database
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        # Check if the new password and confirm password match
+        if new_password != confirm_password:
+            flash('Passwords do not match. Please try again.', 'danger')
+            return redirect(url_for('reset_password', token=token))
+
+        # Hash the new password
+        hashed_password = User.hash_password(new_password)
+        # Update the user's password in the database
+        user.password = hashed_password
+        db.session.commit()
+        # Flash a success message
+        flash('Your password has been reset successfully.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html')
+
+# Sample Flask-Mail configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'njdamtech@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Cr7@DSTVR'
+app.config['MAIL_DEFAULT_SENDER'] = 'njdamtech@gmail.com'
+
+# Initialize Flask-Mail
+mail = Mail(app)
+
+# Sample Flask route for sending reset email
+def send_reset_email(user, token):
+    msg = Message('Password Reset Request', sender='njdamtech@gmail.com', recipients=[user.email])
+    msg.body = f"Click the following link to reset your password: {url_for('reset_password', token=token, _external=True)}"
+
+    mail.send(msg)
+
+# Token generation logic
+def generate_reset_token(user, expiration=3600):
+    # Create a serializer with a secret key and an expiration time
+    serializer = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+
+    # Generate a token containing user information
+    token = serializer.dumps({'user_id': user.id}).decode('utf-8')
+
+    return token
+
+def verify_reset_token(token):
+    # Create a serializer with the secret key
+    serializer = Serializer(app.config['SECRET_KEY'])
+
+    try:
+        # Deserialize the token to extract the user's id
+        data = serializer.loads(token)
+        user_id = data['user_id']
+
+        # Retrieve the user object from the database based on the user id
+        # Replace 'User' with your actual User model
+        user = User.query.get(user_id)
+
+        return user
+
+    except SignatureExpired:
+        # Token has expired
+        return None
+    except BadSignature:
+        # Token is invalid
+        return None
 
 @app.route('/dashboard')
 @login_required
@@ -96,8 +222,8 @@ def create_account():
     username = request.form['username']
     # Check if the username already exists in the database
     if User.username_exists(username):
-        error_message = 'Username already taken. Please choose another one.'
-        return render_template('signup.html', error=error_message)
+        flash('Username already taken. Please choose another one.', 'error')
+        return redirect(url_for('signup'))
     else:
         # Continue processing the rest of the form data
         password = request.form['password']
@@ -120,18 +246,196 @@ def create_account():
 
         return redirect(url_for('signin'))
 
+@app.route('/transaction', methods=['GET'])
+@login_required
+def transaction():
+    user_id = current_user.user_id
+    # Fetch data related to the user with the provided user_id
+    user_instance = User.query.filter_by(user_id=user_id).first()
+    account_instance = User.get_account(user_instance)
+    # Example: transactions = get_transactions(user_id)
+    transactions = Account.get_transactions(account_instance)
+    return render_template('transaction.html', transactions=transactions)
+
+@app.route('/loan', methods=['GET'])
+@login_required
+def loan():
+    user_id = current_user.user_id
+    # Fetch data related to the user with the provided user_id
+    user_instance = User.query.filter_by(user_id=user_id).first()
+    # Example: loans = get_loans(user_id)
+    loans = User.get_loans(user_instance)
+    return render_template('loan.html', loans=loans)
+
+@app.route('/transfer', methods=['GET', 'POST'])
+@login_required
+def transfer():
+    user_id = current_user.user_id
+    if request.method == 'POST':
+        # Fetch data related to the user with the provided user_id
+        user_instance = User.query.filter_by(user_id=user_id).first()
+        account_instance = User.get_account(user_instance)
+        # Example: transfers = get_transfers(user_id)
+        recipient = request.form['account_number']
+        ammount = request.form['amount']
+        transfers = Account.transfer(account_instance, recipient, amount)
+        return render_template('transfer.html', transfers=transfers, user_id=user_id)
+    
+    # Handle GET requests (show the form)
+    return render_template('transfer.html', user_id=user_id)
+
+@app.route('/pay', methods=['GET', 'POST'])
+@login_required
+def pay():
+    user_id = current_user.user_id
+    if request.method == 'POST':
+        # Fetch data related to the user with the provided user_id
+        user_instance = User.query.filter_by(user_id=user_id).first()
+        account_instance = User.get_account(user_instance)
+        recipient = request.form['account_number']
+        ammount = request.form['amount']
+        # Example: bills = get_bills(user_id)
+        bills = Account.transfer(account_instance, recipient, amount)
+        return render_template('pay.html', bills=bills, user_id=user_id)
+    # Handle GET requests (show the form)
+    return render_template('pay.html', user_id=user_id)
+
+# Admin Authenticating and their functionality
+@app.route('/signin/admin')
+def signin_admin():
+    return render_template('signin_admin.html')
+
+@app.route('/login/admin', methods=['GET', 'POST'])
+def login_admin():
+    username = request.form['username']
+    password = request.form['password']
+    user_instance = User.query.filter_by(username=username, is_admin=True).first()
+    if user_instance is None:
+        # Handle the case where the user is not found or is not an admin
+        flash('User is not found or is not an admin!', 'error')
+        return redirect(url_for('signin_admin'))
+
+    # Entered Password
+    encoded_password = password.encode('utf-8')
+    # Stored Hashed Password
+    stored_password = user_instance.password
+    encoded_stored = stored_password.encode('utf-8')
+
+    if checkpw(encoded_password, encoded_stored):
+        login_user(user_instance)
+        # Redirect to the dashboard for the given admin user
+        return redirect(url_for('admin_dashboard'))
+    else:
+        # Handle invalid login (e.g., show an error message)
+        flash('Invalid Username or Password!', 'error')
+        return redirect(url_for('signin_admin'))
+
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    # Admin dashboard logic
+    if current_user.is_admin:
+        account_instance = User.get_account(current_user)
+        return render_template('admin_dashboard.html', User=current_user, Account=account_instance)
+    else:
+        abort(403)  # Forbidden
+
+@app.route('/admin/profile')
+@login_required
+def admin_profile():
+    if current_user.is_admin:
+        # Fetch admin profile information
+        return render_template('admin_profile.html', User=current_user)
+    else:
+        abort(403)  # Forbidden
+
+@app.route('/admin/create', methods=['GET', 'POST'])
+@login_required
+def create_user():
+    if current_user.is_admin:
+        if request.method == 'POST':
+            # Retrieve form data from the request
+            username = request.form['username']
+            password = request.form['password']
+            first_name = request.form['firstName']
+            last_name = request.form['lastName']
+            email = request.form['email']
+            phone_number = request.form['phoneNumber']
+            country = request.form['country']
+            city = request.form['city']
+            home_address = request.form['homeAddress']
+            account_type = request.form['accountType']
+            is_admin = request.form['isAdmin']
+
+            # Create a new user
+            user_created = User.signup(username, password, first_name, last_name, email, phone_number, country, city, home_address, account_type, is_admin)
+
+            if user_created:
+                flash('User created successfully!', 'success')
+                return redirect(url_for('admin_dashboard'))
+            else:
+                flash('Failed to create the user. Please try again.', 'error')
+
+        return render_template('create_user.html')
+
+    else:
+        abort(403)  # Forbidden
+
+@app.route('/upload_profile_picture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    if 'profilePicture' not in request.files:
+        flash('No file part', 'error')
+        return redirect(request.url)
+
+    file = request.files['profilePicture']
+
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        # Securely save the file with the desired filename
+        filename = secure_filename(f"{User.username}_profile.png")
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('Profile picture uploaded successfully', 'success')
+    else:
+        flash('Invalid file type. Allowed types are png, jpg, jpeg, gif', 'error')
+
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/deposit/<int:user_id>', methods=['POST'])
+@login_required
+def admin_deposit(user_id):
+    # Logic to deposit money to the account of the specified user
+    pass
+
+@app.route('/admin/delete/<int:user_id>', methods=['POST'])
+@login_required
+def admin_delete_user(user_id):
+    # Logic to delete the specified user
+    pass
+
+@app.route('/admin/loan/<int:user_id>', methods=['POST'])
+@login_required
+def admin_loan_user(user_id):
+    # Logic to lend loan to the specified user
+    pass
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
-@app.route('/500.html/')
-def internal_server_error():
-    return render_template('500.html'), 500
+@app.errorhandler(500)
+def internal_server_error(e):
+    flash('Sorry for Inconvenience. Please try again later! Is under development.', 'error')
+    return redirect(url_for('signin_admin'))
+    #return render_template('500.html'), 500
 
-@app.route('/502.html/')
-def bad_request():
+@app.errorhandler(502)
+def bad_request_error():
     return render_template('502.html'), 502
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=8000, debug=True)

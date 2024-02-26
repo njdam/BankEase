@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
-    <title>BankEase SignUp</title>
+    <title>Create User</title>
 </head>
 <body>
     <header>
@@ -17,8 +17,7 @@
         </div>
         <nav>
             <ul>
-		    <li><a href="{{ url_for('home') }}">Home</a></li>
-		    <li><a href="{{ url_for('signin') }}">Login</a></li>
+		    <li><a href="{{ url_for('admin_dashboard') }}">Home</a></li>
             </ul>
         </nav>
     </header>
@@ -26,9 +25,8 @@
     <h1>Welcome to BankEase</h1>
         <p id="p3"><b style="color: goldenrod;">Join bankease today</b> and step into a world of modern banking, where simplicity meets sophistication. Elevate your banking experience with us - <b style="color: greenyellow; font-family: 'Courier New', Courier, monospace;">Banking Simplified, Anytime, Anywhere.</b></p>
     <hr>
-    <h2>Sign Up</h2>
-    
-    <form action="/register" method="post">
+    <h2>Create User</h2>
+    <form method="post" action="{{ url_for('create_user') }}"> 
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
     
@@ -56,19 +54,41 @@
         <label for="homeAddress">Home Address:</label>
         <input type="text" id="homeAddress" name="homeAddress" required>
 
-	<label for="accountType">Account Type:</label>
-
-	<select id="accountType" name="accountType" required>
-		<option value="" selected disabled hidden>Select an account type</option>
-		<option value="Current Account">Current Account</option>
-		<option value="Saving Account">Saving Account</option>
-		<option value="Fixed Account">Fixed Account</option>
+	<label for="isAdmin">Is Admin:</label>
+	<select id="isAdmin" name="isAdmin" onchange="updateAccountType()">
+	    <option value="True">True</option>
+	    <option value="False" selected>False</option>
 	</select>
+
+	<label for="accountType">Account Type:</label>
+	<select id="accountType" name="accountType" required>
+	    <option value="" selected disabled hidden>Select an account type</option>
+	    <option value="Current Account">Current Account</option>
+	    <option value="Saving Account">Saving Account</option>
+	    <option value="Fixed Account">Fixed Account</option>
+	</select>
+
 	<button type="submit">Create Account</button>
 	<br>
 	<p>Do you have account? <a href="{{ url_for('signin') }}">Login here</a></p>
     </form>
+
+    <script>
+	    function updateAccountType() {
+	        var isAdminSelect = document.getElementById("isAdmin");
+	        var accountTypeSelect = document.getElementById("accountType");
+
+	        // If "Is Admin" is selected as True, set Account Type to "Admin Type"
+	        if (isAdminSelect.value === "True") {
+	            accountTypeSelect.value = "Admin";
+	            accountTypeSelect.disabled = true;  // Optional: Disable the selection
+	        } else {
+	            // If "Is Admin" is selected as False, enable the Account Type selection
+	            accountTypeSelect.disabled = false;
+	            // You can add additional logic here if needed
+	        }
+	    }
+	</script>
     
-    <footer></footer>
     </body>
     </html> 

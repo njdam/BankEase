@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styles/profile.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
+    <title>Admin Profile</title>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../static/images/bankease_logo.png" alt="BankEase Logo">
+            </div>
+	    <h1>Welcome, Admin {{ User.first_name }}!</h1>
+            <nav>
+                <ul>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+<div class="profile-container">
+    <form id="uploadForm" action="{{ url_for('upload_profile_picture') }}" method="post" enctype="multipart/form-data">
+        <img src="{{ url_for('static', filename='images/BankEase_Icon.gif') }}" alt="Avatar" id="profilePicture" class="profile-picture" onclick="openModal()">
+        <input type="file" id="fileInput" name="profilePicture" accept="image/*">
+        <button type="button" onclick="submitForm()">Upload</button>
+    </form>
+    <div class="user-name">{{ User.first_name }} {{ User.last_name }}</div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>Change Profile Picture</h2>
+        <form id="uploadFormModal" action="{{ url_for('upload_profile_picture') }}" method="post" enctype="multipart/form-data">
+            <input type="file" id="newFileInput" name="newProfilePicture" accept="image/*">
+            <button type="button" onclick="saveChanges()">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function submitForm() {
+        // Check if a file is selected
+        var fileInput = document.getElementById('fileInput');
+        if (fileInput.files.length === 0) {
+            alert('Please select a file');
+            return;
+        }
+
+        document.getElementById('uploadForm').submit();
+    }
+</script>
+
+    <div class="basic-section">
+        <div class="profile-section">
+            <h2>Personal Information</h2>
+            <!-- Personal information displayed here -->
+	    <p>Username: {{ User.username }}</p>
+	    <p>Email: {{ User.email }}</p>
+            <button onclick="showEditProfileModal()">Edit</button>
+        </div>
+        <hr>
+        <div class="profile-section">
+            <h2>Security and Access</h2>
+            <!-- Security and access information displayed here -->
+            <button onclick="showChangePasswordModal()">Change Password</button>
+        </div>
+        <hr>
+        <div class="profile-section">
+            <h2>Help and Support</h2>
+            <!-- Help and support information displayed here -->
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h2>Settings</h2>
+        <div class="language-dropdown">
+            <label for="language">Language:</label>
+            <select id="language">
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+                <option value="french">French</option>
+                <!-- Add more language options as needed -->
+            </select>
+        </div>
+        <hr>
+	<button><a href="{{ url_for('logout') }}" onclick="logout()">Logout</a></button>
+        <hr>
+        <div class="version">Version 1.0.0</div>
+    </div>
+    
+    <!-- Profile Model -->
+    <div class="profile-modal" id="profileModal">
+        <h2>Edit Profile</h2>
+        <label for="editUsername">Username:</label>
+        <input type="text" id="editUsername" value="{{ User.username }}" disabled>
+    
+        <label for="editFirstName">First Name:</label>
+        <input type="text" id="editFirstName" value='{{ User.first_name }}'>
+    
+        <label for="editLastName">Last Name:</label>
+        <input type="text" id="editLastName" value="{{ User.last_name }}">
+    
+        <label for="editEmail">Email:</label>
+        <input type="email" id="editEmail" value="{{ User.email }}">
+    
+        <label for="editPhoneNumber">Phone Number:</label>
+        <input type="email" id="editPhoneNumber" value="{{ User.phone_number }}">
+        
+        <label for="editCountry">Country:</label>
+        <input type="email" id="editCountry" value="{{ User.country }}">
+    
+        <label for="editCity">City:</label>
+        <input type="email" id="editCity" value="{{ User.city }}">
+    
+        <label for="editHomeAddress">Home Address:</label>
+        <input type="email" id="editHomeAddress" value="{{ User.home_address }}">
+    
+        <label for="editProfilePic">Profile Picture:</label>
+        <input type="file" id="editProfilePic">
+    
+        <button onclick="saveProfileChanges()">Save Changes</button>
+        <button class="discard" onclick="discardChanges()">Discard Changes</button>
+    <script src="{{ url_for('static', filename='scripts/admin_profile.js') }}"></script>
+</body>
+</html>
