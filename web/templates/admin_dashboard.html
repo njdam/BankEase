@@ -9,13 +9,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
     <!-- Add these links in the head section of your HTML -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
 
     <title>Admin Dashboard</title>
 </head>
@@ -33,30 +31,29 @@
 	    <a href="#">Withdraw</a>
 	    <a href="{{ url_for('transfer') }}">Deposit</a>
 	    <a href="{{ url_for('create_user') }}">Create User</a>
-	    <a href="{{ url_for('transaction') }}">Delete User</a>
+	    <a href="{{ url_for('user_list') }}">Users</a>
+	    <a href="{{ url_for('transaction') }}">Statements</a>
 	    <a href="{{ url_for('loan') }}">Lend Loan</a>
 	    <li><a href="{{ url_for('logout') }}">Logout</a></li>
 	</div>
 
 	<div class="main-content" id="mainContent">
-            <div class="header">
-                <div class="account-info">
-                    <span>{{ User.first_name }} {{ User.last_name }}</span>
-                </div>
-            </div>
-        </div>
+            <div class="account-info">
+                <span>{{ User.first_name }} {{ User.last_name }}</span>
+	    </div>
 
-        <div class="account-info">
-            <h2>Account Information</h2>
-            <!-- Display user account details here -->
-            <p>Account Number: {{ Account.account_number }}</p>
-            <p>Account Balance: RWF {{ Account.balance }}</p>
-            <p>Account Type: {{ Account.account_type }}</p>
-        </div>
+	    <div class="account-info">
+                <h2>Account Information</h2>
+		<!-- Display user account details here -->
+		<p>Account Number: {{ Account.account_number }}</p>
+		<p>Account Balance: RWF {{ Account.balance }}</p>
+		<p>Account Type: {{ Account.account_type }}</p>
+	    </div>
 
-	<div class="account-info">
-            <h2>Recent Transactions</h2>
-            <!-- Display recent transactions here --> 
+	    <div class="account-info">
+	        <h2>Recent Transactions</h2>
+		<!-- Display recent transactions here -->
+	    </div>
 	</div>
     </div>
 

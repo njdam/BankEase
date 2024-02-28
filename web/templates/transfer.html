@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add these links in the head section of your HTML -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-pzjw8cOZU8LglKg3HUU9jp7f9r8fLEOVkf7Bx4OgKCA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <title>Transfers</title>
     <style>
         body {
@@ -52,31 +58,94 @@
         button:hover {
             background-color: #45a049;
         }
+
+	/* Fetching Account number information */
+	.recipient-details {
+	    background-color: #dff0d8; /* Greenish background color for success */
+	    padding: 10px;
+	    border: 1px solid #3c763d; /* Darker green border color */
+	    border-radius: 4px;
+	    margin-top: 5px;
+	}
+
+	.recipient-details-error {
+	    background-color: #f2dede; /* Reddish background color for error */
+	    padding: 10px;
+	    border: 1px solid #a94442; /* Darker red border color */
+	    border-radius: 4px;
+	    margin-top: 5px;
+	}
+
     </style>
 </head>
 <body>
+<!-- Flashed Message -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <!-- Bootstrap modal HTML structure -->
+            <div class="modal fade" id="myModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-body text-center" style="color: {% if category == 'error' %}red{% else %}green{% endif %};">
+                                {{ message }}
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 5px; right: 15px;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <script>
+            $(document).ready(function () {
+                {% for category, message in messages %}
+                    $('#myModal{{ loop.index }}').modal('show');
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
+{% endwith %}
 
 <h1>Transfers</h1>
-
+<h2>Sender Account: {{ account.account_number }}</h2>
 <form action="{{ url_for('transfer', user_id=user_id) }}" method="post">
     <label for="account_number">Recipient Account Number:</label>
-    <input type="text" id="account_number" name="account_number" required>
+    <input type="text" id="account_number" name="account_number" required onblur="fetchRecipientDetails()">
+    <div id="recipientDetailsBox"></div>
 
     <label for="amount">Amount:</label>
     <input type="text" id="amount" name="amount" required>
 
     <button type="submit">Transfer</button>
 </form>
-{% if transfers %}
-    <p>{{ transfers | replace("\n", "<br>") }}</p>
-{% endif %}
-<!--
-{% for transfer in transfers %}
-    <p>Transfer ID: {{ transfer.id }}</p>
-    <p>Amount: {{ transfer.amount }}</p>-->
-    <!-- Add more transfer details as needed -->
-    <!--
-{% endfor %}
--->
+
+<script>
+    function fetchRecipientDetails() {
+        var recipientAccount = $('#account_number').val();
+
+        // Make AJAX request to fetch recipient details
+        $.ajax({
+            url: '{{ url_for("get_recipient_details") }}',
+            method: 'POST',
+            data: { account_number: recipientAccount },
+            success: function(response) {
+		console.log('Received response:', response);
+		// Update the recipientDetailsBox div with the received data
+                if (response.full_name) {
+                    $('#recipientDetailsBox').html('<div class="recipient-details">' + response.full_name + '</div>');
+                } else {
+                    $('#recipientDetailsBox').html('<div class="recipient-details-error">' + response.error + '</div>');
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching recipient details:', error);
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

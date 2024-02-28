@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/styles/signin.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/signin_admin.css">
     <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
@@ -16,31 +16,29 @@
     <title>BankEase Login Page</title>
 </head>
 <body>
+<!-- Flashed Message -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    {% for category, message in messages %}
+        {% for category, message in messages %}
             <!-- Bootstrap modal HTML structure -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Flashed Message</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <div class="modal-body text-center" style="color: {% if category == 'error' %}red{% else %}green{% endif %};">
+                                {{ message }}
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 5px; right: 15px;">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                        </div>
-                        <div class="modal-body">
-                            {{ message }}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
     {% endif %}
-    {% endwith %}
+{% endwith %}
+
     <div class="login-container">
         <div class="left-column">
             <div class="welcome-content">
@@ -51,16 +49,16 @@
         <div class="right-column">
             <div class="center-content">
                 <h2>Admin Login</h2>
-                <p>Enter your login credentials to access your account</p>
+                <p style="color: grey">Enter your login credentials to access your account</p>
 		<form action="/login/admin" method="post">
                     <label for="username">Username</label>
                     <br>
-                    <input type="text" id="username" name="username" required>
+                    <input class="box" type="text" id="username" name="username" required>
                     <br>
                     <br>
                     <label for="password">Password</label>
                     <br>
-                    <input type="password" id="password" name="password" required>
+                    <input class="box" type="password" id="password" name="password" required>
                     <br>
                     <br>
                     <div class="checkbox">
@@ -68,8 +66,9 @@
                         <label for="agree">By logging in, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
                     </div>
                     <br>
-                    <button type="submit">Login</button>
+                    <button class="signin-button" type="submit">Login</button>
                 </form>
+		<br>
 		<p>Forgot your password? <a href="{{ url_for('forgot_password') }}">Reset it here</a></p>
 		<p>Don’t have an account? <a href="{{ url_for('signup') }}">Register</a></p>
             </div>

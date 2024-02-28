@@ -7,22 +7,25 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
-    <link rel="stylesheet" type="text/css" href="../static/styles/index.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/styles/home.css">
+    <!-- Add these links in the head section of your HTML -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
     <title>BankEase - Modern Online Banking</title>
 </head>
 <body>
     <header>
-        <div class="logo-container">
-		<img src="../static/images/bankease_logo.png" alt="BankEase Logo">
-        </div>
-        <nav>
-            <ul>
+	<img style="height: 50px;" src="../static/images/bankease_logo.png" alt="BankEase Logo">
+	<nav>
+	    <ul>
 		    <li><a href="{{ url_for('signin') }}">Login</a></li>
 		    <li><a href="{{ url_for('signup') }}">Signup</a></li>
-            </ul>
-        </nav>
+	    </ul>
+	</nav>
     </header>
 
     <section id="hero">

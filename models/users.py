@@ -26,8 +26,8 @@ class User(db.Model, UserMixin, BankEase):
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    accounts = db.relationship('Account', backref='user', lazy=True)
-    loans = db.relationship('Loan', backref='user', lazy=True)
+    accounts = db.relationship('Account', backref='user', lazy=True, cascade='all, delete-orphan')
+    loans = db.relationship('Loan', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def __init__(self, username, password):
         """ User initialisation """
@@ -51,6 +51,15 @@ class User(db.Model, UserMixin, BankEase):
             return 1
         else:
             return 0
+
+    @classmethod
+    def delete_user(cls, user_id):
+        user = cls.query.get(user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return True
+        return False
 
     @property
     def is_active(self):

@@ -3,6 +3,7 @@
 from models.base import BankEase
 from models.transactions import Transaction
 from api.v1.app import db
+from decimal import Decimal
 
 
 class Account(db.Model, BankEase):
@@ -160,14 +161,16 @@ class Account(db.Model, BankEase):
 
         try:
             recipient = self.get_account_by_account_number(account_number)
-            amount = float(amount)
-            self.balance = float(self.balance)
-            recipient.balance = float(recipient.balance)
-            if self.balance > amount:
+            amount = Decimal(amount)
+            self.balance = Decimal(self.balance)
+            recipient.balance = Decimal(recipient.balance)
+            if self.balance >= amount > 0:
                 self.balance -= amount
                 recipient.balance += amount
-                self.update_balance() # Updating Balance of sender in DataBase
-                recipient.update_balance() # Updating Balance of receiver in DataBase
+                # Updating Balance of sender in DataBase
+                self.update_balance()
+                # Updating Balance of receiver in DataBase
+                recipient.update_balance()
 
                 # Updating transaction history sender
                 query = '''

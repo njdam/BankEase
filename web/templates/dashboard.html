@@ -8,43 +8,51 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
     <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
-    <title>BankEase Dashboard</title>
+    <!-- Add these links in the head section of your HTML -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <title>BankEase Customer Dashboard</title>
 </head>
 <body>
+    <header>
+        <button class="menu-icon" onclick="openSidebar()">&#9776;</button>
+	<h1>Welcome to BankEase - Online Banking Solution</h1>
+	<div class="profile-section" onclick="openProfilePage()">
+	    <a href="{{ url_for('profile') }}"><img src="../static/images/BankEase_Icon.gif" alt="Avatar" class="profile-picture"></a>
+	</div>
+    </header>
+    <div class="dashboard">
+        <div class="sidebar" id="mySidebar">
+            <a href="#" onclick="closeSidebar()">Close</a>
+	    <a href="{{ url_for('transfer') }}">Tranfer</a>
+	    <a href="{{ url_for('pay') }}">Pay Bills</a>
+	    <a href="{{ url_for('loan') }}">Loan Info</a>
+	    <a href="{{ url_for('transaction') }}">Mini Statement</a>
+	    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+	</div>
 
-<div class="dashboard">
-    <div class="sidebar" id="mySidebar">
-        <a href="#" onclick="closeSidebar()">Close</a>
-	<a href="{{ url_for('transaction') }}">Transaction</a>
-	<a href="{{ url_for('loan') }}">Loans</a>
-	<a href="{{ url_for('transfer') }}">Transfer</a>
-	<a href="{{ url_for('pay') }}">Pay Bill</a>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
-    </div>
-
-    <div class="main-content" id="mainContent">
-        <div class="header">
-            <div class="menu-icon" onclick="openSidebar()">&#9776;</div>
+	<div class="main-content" id="mainContent">
             <div class="account-info">
                 <span>{{ User.first_name }} {{ User.last_name }}</span>
-            </div>
-            <div class="profile-section" onclick="openProfilePage()">
-                <a href="{{ url_for('profile') }}"><img src="../static/images/BankEase_Icon.gif" alt="Avatar" class="profile-picture"></a>
-            </div>
-        </div>
+	    </div>
 
-        <div class="account-info">
-            <h2>Account Information</h2>
-            <!-- Display user account details here -->
-            <p>Account Number: {{ Account.account_number }}</p>
-            <p>Account Balance: RWF {{ Account.balance }}</p>
-            <p>Account Type: {{ Account.account_type }}</p>
-        </div>
+	    <div class="account-info">
+                <h2>Account Information</h2>
+		<!-- Display user account details here -->
+		<p>Account Number: {{ Account.account_number }}</p>
+		<p>Account Balance: RWF {{ Account.balance }}</p>
+		<p>Account Type: {{ Account.account_type }}</p>
+	    </div>
 
-        <h2>Recent Transactions</h2>
-        <!-- Display recent transactions here -->
+	    <div class="account-info">
+	        <h2>Recent Transactions</h2>
+		<!-- Display recent transactions here -->
+	    </div>
+	</div>
     </div>
-</div>
-<script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
 </body>
 </html>

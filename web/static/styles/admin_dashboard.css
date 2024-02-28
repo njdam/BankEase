@@ -5,18 +5,13 @@ body {
 }
 
 header {
-    padding: 0 2%;  /* Adjusted padding */
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: #034ea2;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     color: white;
-    height: 75px;
-}
-
-header h1 {
-    text-align: center;
-    font-size: 24px;
 }
 
 .dashboard {
@@ -79,6 +74,9 @@ button {
 }
 
 .profile-section {
+    position: fixed;
+    top: 0;
+    right: 0;
     margin: 10px;
     cursor: pointer;
 }
@@ -89,4 +87,62 @@ button {
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #fff;
+}
+
+.profile-options {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.profile-options a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.profile-options a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Profile modal styles */
+.profile-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+/* Additional styles for content */
+.profile-modal label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.profile-modal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.profile-modal button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }

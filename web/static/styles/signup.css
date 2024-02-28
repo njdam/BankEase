@@ -1,101 +1,105 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #034ea2;
+    font-family: Arial, sans-serif !important;
+    background-color: #034ea2 !important;
     background-image: image-set("../images/sky_background.png");
-    background-size: 260vw;
-    background-repeat: no-repeat;
-    background-position: bottom;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+    background-size: 260vw !important;
+    background-repeat: no-repeat !important;
+    background-position: bottom !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 @media screen and (min-width: 768px) {
     body {
-        background-size: 130vw;
+        background-size: 130vw !important;
     }
 }
 
 header {
-    background-color: #034ea2;
-    top: 0;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 50px;
+    background-color: #034ea2 !important;
+    top: 0 !important;
+    color: white !important;
+    padding: 20px 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 75px !important;
+    border-bottom: 2px solid white;
 }
 
 .logo-container img {
-    max-height: 50px;
-    width: 100%;
+    max-height: 50px !important;
+    width: 100% !important;
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+    list-style: none !important;
+    display: flex !important;
+    gap: 20px !important;
 }
 
 nav a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    text-align: center;
+    text-decoration: none !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-align: center !important;
 }
 
 p#p3 {
-    color: #fff;
+    color: #fff !important;
+    text-align: center !important;
 }
 
 h1 {
-    color: #fff;
+    color: #fff !important;
+    text-align: center !important;
 }
 
 h2 {
-    color: #fff;
+    color: #fff !important;
+    text-align: center !important;
 }
 
 form {
     max-width: 400px;
     margin: 20px auto;
     background-color: #fff;
-    padding: 20px;
+    padding: 20px !important;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
 }
 
 label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #000;
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-weight: bold !important;
+    color: #000 !important;
 }
 
 input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    width: 100% !important;
+    padding: 10px !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px ;
+    box-sizing: border-box !important;
 }
 
 select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    width: 100% !important;
+    padding: 10px !important;
+    margin-bottom: 20px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
 }
 
 button {
-    background-color: #4caf50;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #4caf50 !important;
+    color: #fff !important;
+    padding: 10px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
 }

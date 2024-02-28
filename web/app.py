@@ -241,10 +241,10 @@ def create_account():
 
         if user_created:
             flash('Account created successfully!', 'success')
+            return redirect(url_for('signup'))
         else:
             flash('Failed to create the account. Please try again.', 'error')
-
-        return redirect(url_for('signin'))
+            return redirect(url_for('signin'))
 
 @app.route('/transaction', methods=['GET'])
 @login_required
@@ -271,18 +271,25 @@ def loan():
 @login_required
 def transfer():
     user_id = current_user.user_id
+    # Fetch data related to the user by current user_id
+    sender_account = Account.query.filter_by(user_id=user_id).first()
     if request.method == 'POST':
         # Fetch data related to the user with the provided user_id
-        user_instance = User.query.filter_by(user_id=user_id).first()
-        account_instance = User.get_account(user_instance)
-        # Example: transfers = get_transfers(user_id)
         recipient = request.form['account_number']
-        ammount = request.form['amount']
-        transfers = Account.transfer(account_instance, recipient, amount)
-        return render_template('transfer.html', transfers=transfers, user_id=user_id)
-    
+        amount = request.form['amount']
+
+        try:
+            # Example: transfers = get_transfers(user_id)
+            transfers = sender_account.transfer(recipient, amount)
+            flash(transfers, 'success')  # Flash success message
+            return redirect(url_for('transfer'))
+
+        except Exception as e:
+            flash(f"Transfer failed: {e}", 'error')  # Flash error message
+            return redirect(url_for('transfer'))
+
     # Handle GET requests (show the form)
-    return render_template('transfer.html', user_id=user_id)
+    return render_template('transfer.html', account=sender_account)
 
 @app.route('/pay', methods=['GET', 'POST'])
 @login_required
@@ -293,7 +300,7 @@ def pay():
         user_instance = User.query.filter_by(user_id=user_id).first()
         account_instance = User.get_account(user_instance)
         recipient = request.form['account_number']
-        ammount = request.form['amount']
+        amount = request.form['amount']
         # Example: bills = get_bills(user_id)
         bills = Account.transfer(account_instance, recipient, amount)
         return render_template('pay.html', bills=bills, user_id=user_id)
@@ -365,21 +372,73 @@ def create_user():
             city = request.form['city']
             home_address = request.form['homeAddress']
             account_type = request.form['accountType']
-            is_admin = request.form['isAdmin']
+            is_admin_str = request.form['isAdmin']
+            # Convert to boolean (default to False if not provided or not recognized)
+            is_admin = is_admin_str.lower() == 'true' if is_admin_str else False
+            try:
+                # Create a new user
+                user_created = User.create_user(
+                        username, password, first_name, last_name, email,
+                        phone_number, country, city, home_address,
+                        account_type, is_admin)
 
-            # Create a new user
-            user_created = User.signup(username, password, first_name, last_name, email, phone_number, country, city, home_address, account_type, is_admin)
-
-            if user_created:
                 flash('User created successfully!', 'success')
-                return redirect(url_for('admin_dashboard'))
-            else:
-                flash('Failed to create the user. Please try again.', 'error')
+                return redirect(url_for('user_list'))
+
+            except Exception as e:
+                flash(f'Failed to create the user due to {e}. Please try again.', 'error')
+                return redirect(url_for('create_user'))
 
         return render_template('create_user.html')
 
     else:
         abort(403)  # Forbidden
+
+@app.route('/user_list')
+@login_required
+def user_list():
+    if current_user.is_admin:
+        # Retrieve all users from the database
+        users = User.query.all()
+        return render_template('user_list.html', users=users)
+    else:
+        flash('You do not have permission to access this page.', 'error')
+        return redirect(url_for('home'))
+
+@app.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def delete_user(user_id):
+    # Retrieve the user from the database
+    user = User.query.get_or_404(user_id)
+
+    try:
+        # Delete the user and associated accounts
+        User.delete_user(user_id)
+        flash('User and associated accounts deleted successfully!', 'success')
+    except Exception as e:
+        # Handle any exceptions (e.g., database errors)
+        flash(f'Failed to delete user and accounts: {e}', 'error')
+
+    return redirect(url_for('user_list'))
+
+
+@app.route('/get_recipient_details', methods=['POST'])
+def get_recipient_details():
+    account_number = request.form.get('account_number')
+    print(f"Received request for account number: {account_number}")
+    # Query the database to get recipient details
+    #recipient_account = Account.query.filter_by(account_number=account_number).first()
+
+    # Fetch the associated user by db relationship named 'user'
+    '''if recipient_account:
+        user = recipient_account.user'''
+    user = User.query.join(Account).filter(Account.account_number == account_number).first()
+    if user:
+        # Assuming you have a username attribute in your User model
+        full_name = f"{user.first_name} {user.last_name}"
+        return jsonify({'full_name': full_name})
+    else:
+        return jsonify({'error': 'Account not found'})
 
 @app.route('/upload_profile_picture', methods=['POST'])
 @login_required
