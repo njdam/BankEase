@@ -11,6 +11,7 @@ from itsdangerous import Serializer
 from forms import LoginForm
 from models.users import User
 from models.accounts import Account
+from models.transactions import Transaction
 from api.v1.app import app, login_manager, db
 from werkzeug.security import check_password_hash
 from bcrypt import checkpw
@@ -36,8 +37,6 @@ def load_user(user_id):
         return None
 
 app.url_map.strict_slashes = False
-
-from flask_login import current_user
 
 # Definition of admin required
 def admin_required(view):
@@ -105,6 +104,7 @@ def forgot_password():
 
         else:
             flash('Email not found. Please check your email address and try again.', 'danger')
+
 
         return redirect(url_for('login'))
 
@@ -250,12 +250,14 @@ def create_account():
 @login_required
 def transaction():
     user_id = current_user.user_id
-    # Fetch data related to the user with the provided user_id
-    user_instance = User.query.filter_by(user_id=user_id).first()
-    account_instance = User.get_account(user_instance)
-    # Example: transactions = get_transactions(user_id)
-    transactions = Account.get_transactions(account_instance)
-    return render_template('transaction.html', transactions=transactions)
+    user = current_user
+    # Fetch data related to the user by current user_id
+    sender_account = Account.query.filter_by(user_id=user_id).first()
+    # Fetch transactions from the database, ordered by transaction_id in descending order
+    account_number = sender_account.account_number
+    transactions = Transaction.query.filter_by(account_number=account_number).order_by(Transaction.transaction_id.desc()).all()
+    # Handle GET requests (show the form)
+    return render_template('transaction.html', transactions=transactions, account=sender_account, user=user)
 
 @app.route('/loan', methods=['GET'])
 @login_required
@@ -271,6 +273,7 @@ def loan():
 @login_required
 def transfer():
     user_id = current_user.user_id
+    user = current_user
     # Fetch data related to the user by current user_id
     sender_account = Account.query.filter_by(user_id=user_id).first()
     if request.method == 'POST':
@@ -289,23 +292,32 @@ def transfer():
             return redirect(url_for('transfer'))
 
     # Handle GET requests (show the form)
-    return render_template('transfer.html', account=sender_account)
+    return render_template('transfer.html', account=sender_account, user=user)
 
-@app.route('/pay', methods=['GET', 'POST'])
+@app.route('/pay_bill', methods=['GET', 'POST'])
 @login_required
-def pay():
+def pay_bill():
     user_id = current_user.user_id
+    user = current_user
+    # Fetch data related to the user by current user_id
+    sender_account = Account.query.filter_by(user_id=user_id).first()
+
     if request.method == 'POST':
         # Fetch data related to the user with the provided user_id
-        user_instance = User.query.filter_by(user_id=user_id).first()
-        account_instance = User.get_account(user_instance)
-        recipient = request.form['account_number']
+        account_number = request.form['bill_account']  # Bill account_number
         amount = request.form['amount']
-        # Example: bills = get_bills(user_id)
-        bills = Account.transfer(account_instance, recipient, amount)
-        return render_template('pay.html', bills=bills, user_id=user_id)
+        try:
+            # Example: bills = get_bills(user_id)
+            bills = sender_account.transfer(account_number, amount)
+            flash(bills, 'success')
+            return redirect(url_for('pay_bill'))
+
+        except Exception as e:
+            flash(f"Payment failed: {e}", 'error')  # Flash error message
+            return redirect(url_for('pay_bill'))
+
     # Handle GET requests (show the form)
-    return render_template('pay.html', user_id=user_id)
+    return render_template('pay_bill.html', account=sender_account, user=user)
 
 # Admin Authenticating and their functionality
 @app.route('/signin/admin')

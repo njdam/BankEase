@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <title>BankEase Account Statement</title>
+    <title>BankEase Bill Payments</title>
 </head>
 <body>
 <!-- Flashed Message -->
@@ -33,7 +33,7 @@
     {% endif %}                                                             {% endwith %}
     <header>
 	<img style="height: 40px;" src="../static/images/bankease_logo.png" alt="BankEase Logo">
-	<h3>Mini Statements</h3>
+	<h3>Bill Payments</h3>
 	<ul>
 		<li><a href="{{ url_for('dashboard') }}"><h3>Home</h3></a></li>
 	</ul>
@@ -41,17 +41,19 @@
     <div class="account-info">
 	    <h3>{{user.first_name}} {{user.last_name}} ({{ account.account_number }})</h3>
     </div>
-    {% if transactions %}
-    	{% for transaction in transactions %}
-        	<div class="statement_list">
-			<p>{{ transaction.type }} Rwf {{ transaction.amount }} at {{ transaction.timestamp }} with Transaction Id: {{transaction.transaction_id}}, Balance: Rwf {{ transaction.balance }}</p>
-	        </div>
-	{% endfor %}
-    {% else %}
-    	<div class="statement_list">
-		<p style="tex-align: center;">No Transaction Availbale</p>
-	</div>
-    {% endif %}
+    <form action="{{ url_for('pay_bill') }}" method="post">
+	    <label for="bill_account">Select Bill:</label>
+	    <select id="bill_account" name="bill_account" required>
+		    <option value="" selected disabled hidden>Select Bill Type</option>
+		    <option value="970321240000">BankEase Bill</option>
+		    <option value="970321240001">Electricity Bill</option>
+		    <option value="970321240002">Water Bill</option>
+		    <!-- Add more bill options as needed -->
+	    </select>
+	    <label for="amount">Amount:</label>
+	    <input type="text" id="amount" name="amount" required>
+	    <button class="submit" type="submit">Pay Bill</button>
+    </form>
 
     <!-- Add this script block within your HTML body -->
     <script>

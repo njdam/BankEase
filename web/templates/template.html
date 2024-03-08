@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styles/common_temp.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="../static/images/favicon_io/site.webmanifest">
+    <!-- Add these links in the head section of your HTML -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+    <title>Deposit</title>
+</head>
+<body>
+<!-- Flashed Message -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <!-- Bootstrap modal HTML structure -->
+            <div class="modal fade" id="myModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-body text-center" style="color: {% if category == 'error' %}red{% else %}green{% endif %};">
+                                {{ message }}
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 5px; right: 15px;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <script>
+            $(document).ready(function () {
+                {% for category, message in messages %}
+                    $('#myModal{{ loop.index }}').modal('show');
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
+{% endwith %}
+
+    <header>
+        <button class="menu-icon" onclick="openSidebar()">&#9776;</button>
+	<h1>Welcome, {{ User.fisrt_name User.last_name }}!</h1>
+	<div class="profile-section" onclick="openProfilePage()">
+            <a href="{{ url_for('profile') }}"><img src="../static/images/BankEase_Icon.gif" alt="Avatar" class="profile-picture"></a>
+        </div>
+    </header>
+    <div class="dashboard">
+        <div class="sidebar" id="mySidebar">
+            <a href="#" onclick="closeSidebar()">Close</a>
+	    <a href="#">Withdraw</a>
+	    <a href="{{ url_for('transfer') }}">Deposit</a>
+	    <a href="{{ url_for('create_user') }}">Create User</a>
+	    <a href="{{ url_for('user_list') }}">Users</a>
+	    <a href="{{ url_for('transaction') }}">Statements</a>
+	    <a href="{{ url_for('loan') }}">Lend Loan</a>
+	    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+	</div>
+
+	<div class="main-content" id="mainContent">
+            <div class="account-info">
+                <span>{{ User.first_name }} {{ User.last_name }}</span>
+	    </div>
+
+	    <div class="account-info">
+<h1>Transfers</h1>
+<h2>Sender Account: {{ account.account_number }}</h2>
+<form action="{{ url_for('transfer', user_id=user_id) }}" method="post">
+    <label for="account_number">Recipient Account Number:</label>
+    <input type="text" id="account_number" name="account_number" required onblur="fetchRecipientDetails()">
+    <div id="recipientDetailsBox"></div>
+
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount" required>
+
+    <button type="submit">Transfer</button>
+</form>
+	    </div>
+
+	</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/common_temp.js') }}"></script>
+</body>
+</html>
