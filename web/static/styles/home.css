@@ -9,7 +9,6 @@ img {vertical-align: middle;}
 
 /* Slideshow container */
 .slideshow-container {
-  /*max-width: 1000px;*/
   position: relative;
   margin: auto;
 }
@@ -158,21 +157,17 @@ footer {
 	background-color: #034ea2;
 	height: 50px;
 	width: 100%;
-	position: fixed;
 	bottom: 0;
 	border-top: 1px solid #CCCCCC;
 	line-height: 50px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	justify-self: stretch;
-	text-align: center;
 }
 
 footer a {
     color: white;
     text-decoration: none;
-    display: table-footer-group;
 }
 
 .about-container {

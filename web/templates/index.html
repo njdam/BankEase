@@ -24,30 +24,54 @@
             margin: 0;
             padding: 0;
             font-family: Georgia, 'Times New Roman', Times, serif;
+	    font-size: 1.2em; /* Set a base font size */
+        }
+
+	.body { /* Body part except header and footer */
+	    margin-top: 4em;
+	    border: 0.125em solid lightblue;
+	    border-radius: 0.5em;
+	}
+
+	h1 {
+	    font-size: 3em;
+            text-shadow:
+    	        1px 1px 1px white,
+	        2px 2px 2px black; /* rgba(0, 0, 0, 1); Black text shadow */
+	    text-align: center;
+            font-weight: bold;
+	}
+
+	h2 {
+	    font-size: 2em;
+            text-align: center;
+            font-weight: bold;
         }
 
         header {
             background-color: #034ea2;
             top: 0;
             color: white;
-            padding: 5px 10px;
+            padding: 0.25em 1.25em;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #000;
-            height: 80px;
+	    align-items: center;
+	    position: fixed;
+            height: 4em;
             width: 100%;
         }
 
         .logo-container img {
-            max-height: 40px;
+            max-height: 2.5em;
             width: 100%;
         }
 
         nav ul {
             list-style: none;
             display: flex;
-            gap: 20px;
+            gap: 1.25em;
+	    padding: 0;
+	    margin: 0;
         }
 
         nav a {
@@ -59,6 +83,7 @@
 
         a:hover {
             color: #ffd700;
+	    text-decoration: none;
         }
 
         .menu-icon {
@@ -72,8 +97,6 @@
         .copyright {
             font-family: 'Courier New', Courier, monospace;
             font-style: italic;
-            position: fixed;
-            bottom: 50px;
             width: 100%;
             color: grey;
             padding: 2px;
@@ -81,139 +104,212 @@
         }
 
         footer {
+	    margin: 0;
+	    padding: 0.625em;
             background-color: #034ea2;
             color: black;
             display: flex;
-            border-top: 2px solid #000;
             justify-content: center;
-            justify-items: baseline;
-            position: fixed;
-            max-height: 50px;
+            align-items: center;
             bottom: 0;
             width: 100%;
+	    max-height: auto;
         }
 
         footer ul {
+	    margin: 0;
+	    padding: 0;
+	    gap: 1.25em;
             list-style: none;
             color: #fff;
             display: flex;
-            gap: 30px;
+	    justify-content: center;
+	    flex-wrap: wrap; /* Allow items to wrap to the next row */
             cursor: pointer;
-            bottom: 10px;
         }
 
-        footer ul li a {
+	footer li {
+	    margin-left: 0.25em;
+	    margin-right: 0.25em;
+	}
+
+        footer a {
             text-decoration: none;
             color: #fff;
         }
 
         /* Media Query for small screens */
         @media only screen and (max-width: 800px) {
-            nav a {
-                display: none;
+	    body {
+                font-size: 0.875em; /* Adjust font size for smaller screens */
             }
+
+	    footer ul {
+                flex-direction: row; /* Stack items vertically */
+                align-items: center; /* Center items on smaller screens */
+            }
+
+            footer li {
+                margin: 0; /* Add space between stacked items */
+                text-align: left; /* Center text on smaller screens */
+            }
+
+	    h1 {
+	        font-size: 2.5em;
+	    }
+
+	    h2 {
+	        font-size: 1.5em;
+	    }
+
+	    nav a {
+	        display: none;
+	    }
 
             .menu-icon {
                 display: block;
-                font-size: xx-large;
-                margin-right: 10px;
+                font-size: 1.9em;
+		transform: scaleX(1.4); /* To Stretch width */
                 text-align: center;
                 cursor: pointer;
-                border-radius: 5px;
             }
 
             button {
-                max-height: 50px;
-                width: 60px;
+		border-radius: 0.25em;
+		padding-left: 0.2em;
+		padding-right: 0.2em;
             }
 
             .menu-popup {
                 display: none;
-                position: fixed;
-                margin-left: -40px;
-                top: 90px;
+		top: 4em;
+                position: absolute;
                 width: 100%;
-                z-index: 1000;
-            }
-
-            .project, .menu-popup a {
-                background-color: gray;
-                border: 2px solid wheat;
+		margin-left: -1.25em;
+		padding: 0;
+		background-color: wheat;
+                border: 0.0625em solid wheat;
+		border-radius: 0.5em;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 text-emphasis-style: bold;
-                border-radius: 5px;
-                padding: 1%; /* Adjust padding as needed */
-                padding-right: calc(78%);
-                /*padding-right: 500px; /\* Adjust padding as needed for width of border */
             }
 
             .menu-popup ul {
+		display: flex;
+                justify-content: space-around;
+                align-items: center;
                 list-style: none;
+		margin: 0.625em;
+		padding: 0;
             }
 
             .menu-popup a {
                 text-decoration: none;
+		font-size: 1.25em;
                 color: #034ea2;
-                font-style: bold;
+                font-weight: bold;
             }
 
             .menu-popup a:hover {
-                color: yellow;
+                color: green;
+		background-color: yellow;
+		border-radius: 5px;
+		padding: 0.625em;
+		text-decoration: none;
             }
         }
 
         /* COVER IMAGE SECTION */
-        section#cover_image img {
-            max-width: 100%;
+        section#cover_image {
+            border: 0.0625em solid lightblue;
+            border-radius: 0.5em;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	    height: auto;
             background-color: gainsboro;
-            margin-bottom: -12px;
+	    background-image: url('../static/images/house_backgound_illist.png');
+	    background-size: cover;
+	    display: flex;
+	    justify-content: center;
+	    padding-top: 5em; /* to position at a quarter of the height */
+	    color: #034ea2;
+	    padding-bottom: 25%;
+        }
+
+	section#cover_image h2 {
+	    margin: 0;
+	    font-size: 2em;
+	}
+
+	/* PORTIFOLIO */
+	.portfolio {
+	    border: 0.0625em solid lightblue;
+            border-radius: 0.5em;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	    margin: 1.25em;
+	    justify-content: center;
+	    padding: 1.25em;
+	}
+
+	.portfolio p {
+            text-align: justify;
         }
 
         /* FEATURES SECTION */
+	section#features {
+	    border: 0.0625em solid lightblue;
+            border-radius: 0.5em;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	    margin: 1.25em;
+	    padding: 0.625em;
+	}
+
+	section#features iframe,
         section#features img {
-            max-width: 100%;
-            border-radius: 5px;
-            display: inline;
+	    max-width: 100%;
+	    margin: 0.625em auto;
+            display: block;
             justify-content: center;
+	    border: lightblue;
             border-style: groove;
-        }
-
-        section#features iframe {
-            width: 750px;
-            height: 480px;
-            padding-left: 2%;
-        }
-
-        section#features h2 {
-            text-align: center;
+	    border-radius: 0.5em;
         }
 
         /* ABOUT SECTION */
         section#about {
-            padding-bottom: 50px;
+            border: 0.0625em solid lightblue;
+            border-radius: 0.5em;
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	    margin: 1.25em;
+	    padding: 1.25em;
         }
-        .about-container {
-            margin: 20px;
-            display: flex;
-            flex-direction: row; /* Make columns side by side */
-            align-items: center; /* Center vertically */
+
+	.about-container {
+	    text-align: justify; /* Align text both left and right */
+	    overflow: hidden; /* Clear the float to ensure container wraps around floated elements */
         }
+
+	.img-wrapper {
+	    float: left;
+	    shape-outside: square;
+	    width: 6em; /* Set the width of the image wrapper */
+	    margin-right: 1.25em;
+	}
 
         .about-container img {
-            max-width: 150px; /* Ensure the image doesn't overflow its container */
-            margin-right: 20px; /* Add some space between image and text */
+            max-width: 6em; /* Ensure the image doesn't overflow its container */
+	    float: left; /* Float the image within the wrapper */
+	    max-width: 100%;
+            margin: 0 auto;
+            display: block;
+            justify-content: center;
+            border: lightblue;
+            border-style: groove;
+            border-radius: 0.5em;
         }
 
-        .about-container p {
-            flex: 1; /* Allow the paragraph to grow and fill remaining space */
-        }
-
-        section#about h2 {
-            text-align: center;
-        }
-
-        .portfolio h2, p {
-            text-align: center;
-        }
+	.about-container p {
+	    margin: 0; /* Remove default margin for the paragraph */
+	}
     </style>
 </head>
 
@@ -234,35 +330,35 @@
         <div class="menu-popup" id="menuPopup">
             <ul>
                 <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
-                <br>
                 <li><a href="#features" onclick="toggleMenu()">Features</a></li>
-                <br>
 		<li><a class="project" href="{{ url_for('home') }}" onclick="toggleMenu()">BankEase</a></li>
             </ul>
         </div>
     </header>
 
+  <section class="body">
     <!-- LARGE COVER IMAGE SESSION -->
     <section id="cover_image">
         <div>
-            <img src="../static/images/house_backgound_illist.png" alt="CoverImage">
+	    <h1>Welcome to BankEase</h1>
         </div>
     </section>
     <section class="portfolio">
-        <hr>
         <h2>BankEase: Modern Banking Online Solution</h2>
         <p id="p1">Welcome to BankEase, your gateway to a <b style="color: blueviolet;">Modern Banking Online Solution</b>, where banking is not just a transaction but an experience. With Banking Simplified, Anytime, Anywhere, BankEase brings convenience and innovation to your fingertips. the freedom of seamless transactions with BankEase. Transfer money effortlessly, withdraw cash at your convenience, and pay bills online with the click of a button. Our user-friendly interface ensures a smooth and secure banking experience, allowing you to manage your finances with ease.</p>
-        <hr>
     </section>
 
     <!-- BankEase FEATURES -->
     <section id="features">
         <h2>BankEase Home Feature</h2>
         <img src="../static/images/bankease_home.png" alt="BankEase Home">
+	<hr style="border-color: lightblue">
         <h2>BankEase Login Feature</h2>
         <img src="../static/images/bankease_login.png" alt="BankEase Signin">
+        <hr style="border-color: lightblue">
         <h2>BankEase Signup Feature</h2>
         <img src="../static/images/bankease_signup.png" alt="BankEase Signin">
+        <hr style="border-color: lightblue">
         <!-- YOUTUBE VIDEO ABOUT BANKEASE -->
         <h2>BankEase Demo</h2>
         <iframe src="https://www.youtube.com/embed/J9iUPI8QLMA" title="BankEase Portfolio Project Web Application Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -270,21 +366,35 @@
 
     <!-- ABBOUT SESSION -->
     <section id="about" class="description" role="contentinfo">
-        <hr>
         <h2>About</h2>
-        <a href="https://github.com/njdam/BankEase">BankEase Github Repo</a>
         <div class="about-container">
-            <img src="../static/images/jeandamn.jpg" alt="Jean Damascene Ngaboyimana">
+	    <div class="img-wrapper">
+    	        <img src="../static/images/jeandamn.jpg" alt="Jean Damascene Ngaboyimana">
+	    </div>
             <p>
-                My name is Jean Damascene Ngaboyimana from Rwanda, the land of a thousand hills. I am a Full Stack Developer and a Biomedical Laboratory Scientist. I studied software engineering in the Alx Program, starting as a beginner without a programming background. Today, I proudly present the BankEase project, my first solo Full Stack Developer endeavor.
+	    My name is Jean Damascene Ngaboyimana from Rwanda, the land of a thousand hills. I am a Full Stack Developer and a Biomedical Laboratory Scientist. I studied software engineering in the Alx Program, starting as a beginner without a programming background. Today, I proudly present BankEase, my first solo project as a Full Stack Developer.
+	    </p>
+	    <br>
+	    <p style="text-align: center">
+		<a href="https://github.com/njdam/BankEase">BankEase Github Repo</a>
+		|
                 <a href="https://www.linkedin.com/in/jeandamn">LinkedIn</a>
+		|
                 <a href="https://www.instagram.com/cr7vanjohnson">Instagram</a>
+		|
                 <a href="https://www.twitter.com/cr7vanjohnson">Twitter</a>
+		|
                 <a href="https://www.facebook.com/cr7vanjohnson">Facebook</a>
+		|
                 <a href="https://www.youtube.com/c/damshowtv">YouTube</a>
             </p>
+	    <div class="clearfix"></div>
         </div>
     </section>
+
+    <div class="copyright"><b>Copyright &copy; 2024 BankEase. All rights reserved</b></div>
+
+  </section>
 
     <!-- FOOTER OPTIONS -->
     <footer>
@@ -294,10 +404,9 @@
             <li><a href="https://www.instagram.com/cr7vanjohnson">Instagram</a></li>
             <li><a href="https://www.twitter.com/cr7vanjohnson">Twitter</a></li>
             <li><a href="https://www.facebook.com/cr7vanjohnson">Facebook</a></li>
-            <li><a href="https://www.youtube.com/c/damshowtv">YouTube</a></li>
+	    <li><a href="https://www.youtube.com/c/damshowtv">YouTube</a></li>
         </ul>
     </footer>
-    <div class="copyright"><b>Copyright &copy; 2024 BankEase. All rights reserved</b></div>
 
     <script>
         function toggleMenu() {
