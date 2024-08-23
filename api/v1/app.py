@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Api Flask Application. """
 
-import sys
-# sys.path.append('/home/jeandamn/BankEase/')
+#import sys
+#sys.path.append('/home/jeandamn/BankEase/')
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -12,8 +12,8 @@ import os
 
 app = Flask(
     __name__,
-    template_folder='/home/ubuntu/BankEase/web/templates',
-    static_folder='/home/ubuntu/BankEase/web/static'
+    template_folder='/home/jeandamn/BankEase/web/templates',
+    static_folder='/home/jeandamn/BankEase/web/static'
 )
 
 # Configure the database

@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Starting Flask Web Application. """
 
-import sys
-sys.path.append('/home/ubuntu/BankEase')
+#import sys
+#sys.path.append('/home/ubuntu/BankEase')
 from crypt import methods
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import login_user, UserMixin, current_user, logout_user, login_required
